@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="600" persistent>
+  <v-dialog width="600" persistent v-model="dialog">
     <v-card ref="row">
       <v-container fill-height fluid>
         <v-layout fill-height class="center">
@@ -11,6 +11,14 @@
               :lazy-src="form.avatar"
               :src="form.avatar"
             />
+
+            <upload-btn
+              outline
+              color="indigo"
+              title="点击修改头像"
+              :fileChangedCallback="fileChanged"
+            >
+            </upload-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -20,9 +28,9 @@
             <v-layout wrap>
               <v-flex xs12 sm6 md4>
                 <v-text-field
-                  v-model="form.username"
                   hint="用户名不能包含空格和特殊字符"
                   label="用户名*"
+                  v-model="form.username"
                   validate-on-blur
                   :rules="usernameRules"
                   required
@@ -30,22 +38,22 @@
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
-                  v-model="form.name"
                   label="姓名"
+                  v-model="form.name"
                   hint="输入真实姓名"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12 sm6 md4>
                 <v-text-field
-                  v-model="form.age"
                   label="年龄"
+                  v-model="form.age"
                   persistent-hint
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.email"
                   label="Email*"
+                  v-model="form.email"
                   :rules="emailRules"
                   type="email"
                   required
@@ -53,8 +61,8 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.phoneNumber"
                   label="手机号*"
+                  v-model="form.phoneNumber"
                   :rules="phoneRules"
                   type="phone"
                   required
@@ -62,8 +70,8 @@
               </v-flex>
               <v-flex xs12 sm6>
                 <v-select
-                  v-model="form.sex"
                   :items="sexs"
+                  v-model="form.sex"
                   item-text="text"
                   item-value="value"
                   item-avatar="avatar"
@@ -100,30 +108,29 @@
 </template>
 
 <script>
-import { editUser, uploadImage } from "@/api/user";
+import {
+  addUser,
+  editUser,
+  uploadImage,
+  getIsInUseByUsername,
+  getIsInUseByPhone,
+  getIsInUseByEmail
+} from "@/api/user";
 import {
   validateUsername,
+  validatePassword,
   validatePhone,
   validateEmail
 } from "@/util/validate";
 import { getRoleList } from "@/api/role";
+import UploadButton from "vuetify-upload-button";
 
 export default {
-  name: "Edit",
-  props: {
-    alert: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    row: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    }
+  components: {
+    "upload-btn": UploadButton
   },
+  name: "edit",
+  props: ["row", "alert"],
   data: () => ({
     name: "edit",
     loading: false,
@@ -133,12 +140,12 @@ export default {
       {
         value: 1,
         text: "男",
-        avatar: '<img width="15px" src="/static/image/sex/boy.png"/>'
+        avatar: '<img width="15px" src="../../../../../assets/sex/boy.png"/>'
       },
       {
         value: 0,
         text: "女",
-        avatar: '<img width="15px" src="/static/image/sex/girl.png"/>'
+        avatar: '<img width="15px" src="../../../../../assets/sex/girl.png"/>'
       }
     ],
     roles: [],
@@ -203,15 +210,15 @@ export default {
     handleSubmit(obj) {
       this.loading = true;
       if (this.$refs.form.validate()) {
-        // 先上传头像
+        //先上传头像
         if (!(this.file === "")) {
-          const param = new FormData();
+          let param = new FormData();
           param.append("file", this.file);
           uploadImage(param)
             .then(res => {
               if (res.code === "200") {
                 this.form.avatar = res.data;
-                // 开始提交
+                //开始提交
                 editUser(this.form)
                   .then(res => {
                     this.loading = false;
@@ -272,7 +279,7 @@ export default {
               });
             });
         }
-        // 开始提交
+        //开始提交
         editUser(this.form)
           .then(res => {
             if (res.code === "200" && res.data) {
@@ -316,13 +323,13 @@ export default {
     fileChanged(file) {
       // handle file here. File will be an object.
       // If multiple prop is true, it will return an object array of files.
-      const self = this;
+      let self = this;
       // 看支持不支持FileReader
       if (!file || !window.FileReader) return;
       if (/^image/.test(file.type)) {
         self.file = file;
         // 创建一个reader
-        const reader = new FileReader();
+        var reader = new FileReader();
         // 将图片将转成 base64 格式
         reader.readAsDataURL(file);
         // 读取成功后的回调

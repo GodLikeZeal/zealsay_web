@@ -50,7 +50,7 @@ const fetch = options => {
 export default function request(options) {
   return fetch(options)
     .then(response => {
-      const { statusText, status } = response;
+      const { status } = response;
       const data = response.data;
       if (data.code === "404" || data.code === "401") {
         // 跳转404路由

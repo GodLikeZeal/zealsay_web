@@ -66,8 +66,7 @@
       class="elevation-1"
     >
       <template v-slot:no-data>
-        <p class="text-md-center teal--text">
-          <v-icon>sentiment_satisfied_alt</v-icon>
+        <p class="text-center teal--text">
           已经找遍了，再怎么找也找不到啦！
         </p>
       </template>
@@ -80,12 +79,12 @@
         <img
           v-if="item.sex == 1"
           width="24px"
-          src="@/static/image/sex/boy.png"
+          src="../../../../assets/sex/boy.png"
         />
         <img
           v-if="item.sex == 0"
           width="24px"
-          src="@/static/image/sex/girl.png"
+          src="../../../../assets/sex/girl.png"
         />
       </template>
       <template v-slot:item.status="{ item }">
@@ -152,7 +151,7 @@
                             title="男"
                             >性别 ：<img
                               width="15px"
-                              src="~/static/image/sex/boy.png"
+                              src="../../../../assets/sex/boy.png"
                           /></span>
                           <span
                             v-if="item.sex == 0"
@@ -160,7 +159,7 @@
                             title="女"
                             >性别 ：<img
                               width="15px"
-                              src="~/static/image/sex/girl.png"
+                              src="../../../../assets/sex/girl.png"
                           /></span>
                         </v-col>
                         <v-col cols="6">
@@ -326,7 +325,6 @@
 </template>
 <script>
 import forms from "./components/form";
-import info from "./components/info";
 import {
   getUserList,
   disabeledUser,
@@ -368,26 +366,26 @@ export default {
       formVisible: false,
       title: "",
       icon: [
-        require("@/static/image/food/南瓜.png"),
-        require("@/static/image/food/吐司.png"),
-        require("@/static/image/food/夏威夷果.png"),
-        require("@/static/image/food/山楂片.png"),
-        require("@/static/image/food/开心果.png"),
-        require("@/static/image/food/抹茶麻薯.png"),
-        require("@/static/image/food/杏仁.png"),
-        require("@/static/image/food/板栗.png"),
-        require("@/static/image/food/柠檬干.png"),
-        require("@/static/image/food/炭烤肠.png"),
-        require("@/static/image/food/猪肉铺.png"),
-        require("@/static/image/food/瓜子.png"),
-        require("@/static/image/food/芒果干.png"),
-        require("@/static/image/food/花生.png"),
-        require("@/static/image/food/草莓干.png"),
-        require("@/static/image/food/蒸蛋糕.png"),
-        require("@/static/image/food/蚕豆.png"),
-        require("@/static/image/food/蛋黄酥.png"),
-        require("@/static/image/food/辣条.png"),
-        require("@/static/image/food/鱿鱼仔.png")
+        require("@/assets/food/南瓜.png"),
+        require("@/assets/food/吐司.png"),
+        require("@/assets/food/夏威夷果.png"),
+        require("@/assets/food/山楂片.png"),
+        require("@/assets/food/开心果.png"),
+        require("@/assets/food/抹茶麻薯.png"),
+        require("@/assets/food/杏仁.png"),
+        require("@/assets/food/板栗.png"),
+        require("@/assets/food/柠檬干.png"),
+        require("@/assets/food/炭烤肠.png"),
+        require("@/assets/food/猪肉铺.png"),
+        require("@/assets/food/瓜子.png"),
+        require("@/assets/food/芒果干.png"),
+        require("@/assets/food/花生.png"),
+        require("@/assets/food/草莓干.png"),
+        require("@/assets/food/蒸蛋糕.png"),
+        require("@/assets/food/蚕豆.png"),
+        require("@/assets/food/蛋黄酥.png"),
+        require("@/assets/food/辣条.png"),
+        require("@/assets/food/鱿鱼仔.png")
       ],
       color: ["info", "success", "primary", "warning", "error", "admin.vue"]
     };
@@ -402,17 +400,8 @@ export default {
       set: function() {}
     }
   },
-  async asyncData({ app, query, error }) {
-    const { code, message, data } = await app.$axios.$request(getUserList());
-    if (code === "200") {
-      const pagination = {};
-      pagination.page = data.currentPage;
-      pagination.rowsPerPage = data.pageSize;
-      pagination.totalItems = data.total;
-      return { desserts: data.records, pagination: pagination };
-    } else {
-      return error({ statusCode: code, message: message });
-    }
+  created() {
+    this.search();
   },
   methods: {
     search() {
@@ -475,10 +464,7 @@ export default {
     handleCancel() {
       this.formVisible = false;
     },
-    handleInfo(row) {
-      this.row = { ...row };
-      this.$dialog.show(info, { row: row, width: 600 });
-    },
+
     handleDisabled(row) {
       this.$swal({
         title: "确定要封禁吗？",

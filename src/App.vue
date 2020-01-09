@@ -21,12 +21,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "App",
-
-  data: () => ({
-    //
-  })
-};
-</script>
+<script></script>
+<style scoped lang="scss">
+/* Remove in 1.2 */
+.v-datatable thead th.column.sortable i {
+  vertical-align: unset;
+}
+</style>

@@ -15,7 +15,7 @@
         {{ icon }}
       </v-icon>
     </v-card>
-    <div class="text-xs-right">
+    <div class="text-right">
       <p class="category grey--text font-weight-light" v-text="title" />
       <h3 class="title display-1 font-weight-light">
         {{ value }} <small>{{ smallValue }}</small>

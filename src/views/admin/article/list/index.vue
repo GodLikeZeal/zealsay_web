@@ -1,238 +1,273 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div class="con">
-    <v-container>
-      <v-layout row wrap @keyup.enter="search">
-        <v-flex xs12 sm6 md4>
-          <v-text-field
-            v-model="searchData.title"
-            label="Solo"
-            placeholder="文章标题"
-            solo
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12 sm6 md4>
-          <v-text-field
-            v-model="searchData.label"
-            label="Solo"
-            placeholder="标签关键字"
-            solo
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12 sm6 md4>
-          <v-text-field
-            v-model="searchData.authorName"
-            label="Solo"
-            placeholder="作者名称"
-            solo
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12 sm6 md3>
-          <v-menu
-            v-model="startmenu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="searchData.startDate"
-                label="创建时间检索开始时间"
-                prepend-icon="event"
-                readonly
-                solo
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
+    <v-layout row wrap @keyup.enter="search">
+      <v-flex xs12 sm6 md4>
+        <v-text-field
+          label="Solo"
+          v-model="searchData.title"
+          placeholder="文章标题"
+          solo
+        ></v-text-field>
+      </v-flex>
+      <v-flex xs12 sm6 md4>
+        <v-text-field
+          label="Solo"
+          v-model="searchData.label"
+          placeholder="标签关键字"
+          solo
+        ></v-text-field>
+      </v-flex>
+      <v-flex xs12 sm6 md4>
+        <v-text-field
+          label="Solo"
+          v-model="searchData.authorName"
+          placeholder="作者名称"
+          solo
+        ></v-text-field>
+      </v-flex>
+      <v-flex xs12 sm6 md3>
+        <v-menu
+          v-model="startmenu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          lazy
+          transition="scale-transition"
+          offset-y
+          full-width
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
               v-model="searchData.startDate"
-              @input="startmenu = false"
-            ></v-date-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs12 sm6 md3>
-          <v-menu
-            v-model="endmenu"
-            :close-on-content-click="false"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="searchData.endDate"
-                label="创建时间检索结束时间"
-                prepend-icon="event"
-                readonly
-                solo
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
+              label="创建时间检索开始时间"
+              prepend-icon="event"
+              readonly
+              solo
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="searchData.startDate"
+            @input="startmenu = false"
+          ></v-date-picker>
+        </v-menu>
+      </v-flex>
+      <v-flex xs12 sm6 md3>
+        <v-menu
+          v-model="endmenu"
+          :close-on-content-click="false"
+          :nudge-right="40"
+          lazy
+          transition="scale-transition"
+          offset-y
+          full-width
+          min-width="290px"
+        >
+          <template v-slot:activator="{ on }">
+            <v-text-field
               v-model="searchData.endDate"
-              @input="endmenu = false"
-            ></v-date-picker>
-          </v-menu>
-        </v-flex>
-        <v-flex xs12 sm6 md3>
-          <v-select
-            v-model="searchData.categoryId"
-            solo
-            :items="category"
-            item-text="text"
-            item-value="value"
-            label="请选择分类目录"
-            required
-          ></v-select>
-        </v-flex>
-        <v-flex xs6 sm2 md1>
-          <v-btn color="info" @click="search"
-            >搜索 <br />
-            <v-icon small>search</v-icon>
-          </v-btn>
-        </v-flex>
-        <v-flex xs6 sm2 md1>
-          <v-btn color="success" title="添加" @click="handleAdd">
-            添加 <br />
-            <v-icon small>add</v-icon>
-          </v-btn>
-        </v-flex>
-      </v-layout>
-    </v-container>
+              label="创建时间检索结束时间"
+              prepend-icon="event"
+              readonly
+              solo
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            v-model="searchData.endDate"
+            @input="endmenu = false"
+          ></v-date-picker>
+        </v-menu>
+      </v-flex>
+      <v-flex xs12 sm6 md3>
+        <v-select
+          solo
+          v-model="searchData.categoryId"
+          :items="category"
+          item-text="text"
+          item-value="value"
+          label="请选择分类目录"
+          required
+        ></v-select>
+      </v-flex>
+      <v-flex xs6 sm2 md1>
+        <v-btn color="info" @click="search"
+          >搜索 <br />
+          <v-icon small>search</v-icon>
+        </v-btn>
+      </v-flex>
+      <v-flex xs6 sm2 md1>
+        <v-btn color="success" title="添加" @click="handleAdd">
+          添加 <br />
+          <v-icon small>add</v-icon>
+        </v-btn>
+      </v-flex>
+    </v-layout>
     <v-data-table
       v-model="selected"
       :headers="headers"
-      :page.sync="pagination.page"
-      :items-per-page="pagination.rowsPerPage"
+      :pagination.sync="pagination"
       :items="desserts"
-      :server-items-length="pagination.totalItems"
-      show-select
-      hide-default-footer
+      :total-items="pagination.totalItems"
+      :loading="loading"
+      hide-actions
+      select-all
       class="elevation-1"
     >
+      <template v-slot:headers="props">
+        <tr>
+          <th>
+            <v-checkbox
+              :input-value="props.all"
+              :indeterminate="props.indeterminate"
+              primary
+              hide-details
+              @click.stop="toggleAll"
+            ></v-checkbox>
+          </th>
+          <th
+            v-for="header in props.headers"
+            :key="header.text"
+            :class="[
+              'column sortable',
+              pagination.descending ? 'desc' : 'asc',
+              header.value === pagination.sortBy ? 'active' : '',
+              header.class
+            ]"
+            @click="changeSort(header.value)"
+          >
+            <v-icon small>arrow_upward</v-icon>
+            {{ header.text }}
+          </th>
+        </tr>
+      </template>
       <template v-slot:no-data>
         <p class="text-md-center teal--text">
           <v-icon>sentiment_satisfied_alt</v-icon>
           已经找遍了，再怎么找也找不到啦！
         </p>
       </template>
-      <template v-slot:item.coverImage="{ item }">
-        <v-img
-          height="32px"
-          width="32px"
-          aspect-ratio="1.0"
-          :lazy-src="item.coverImage"
-          :src="item.coverImage"
-          alt="avatar"
-        ></v-img>
-      </template>
-      <template v-slot:item.title="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <div class="limit-width" v-on="on">{{ item.title }}</div>
-          </template>
-          {{ item.title }}
-        </v-tooltip>
-      </template>
-      <template v-slot:item.subheading="{ item }">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <div class="limit-width" v-on="on">
-              {{ item.subheading }}
+      <template slot="items" slot-scope="props">
+        <tr :active="props.selected">
+          <td class="text-xs-right" @click="props.selected = !props.selected">
+            <v-checkbox
+              :input-value="props.selected"
+              primary
+              hide-details
+            ></v-checkbox>
+          </td>
+          <td class="text-xs-right">
+            <v-img
+              height="32px"
+              width="32px"
+              aspect-ratio="1.0"
+              :lazy-src="props.item.coverImage"
+              :src="props.item.coverImage"
+              alt="avatar"
+            ></v-img>
+          </td>
+          <td class="text-xs-right text-truncate">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <div v-on="on" class="limit-width">{{ props.item.title }}</div>
+              </template>
+              {{ props.item.title }}
+            </v-tooltip>
+          </td>
+          <td class="text-xs-right text-truncate">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <div v-on="on" class="limit-width">
+                  {{ props.item.subheading }}
+                </div>
+              </template>
+              {{ props.item.subheading }}
+            </v-tooltip>
+          </td>
+          <td class="text-xs-right col">
+            <span v-if="props.item.status == 'FORMAL'" class="text-success">
+              发布 <v-icon color="success" small>important_devices</v-icon>
+            </span>
+            <span v-if="props.item.status == 'DRAFT'" class="text-warning">
+              草稿 <v-icon color="warning" small>speaker_notes</v-icon>
+            </span>
+            <span v-if="props.item.status == 'DOWN'" class="text-error">
+              下架<v-icon color="error" small>trending_down</v-icon>
+            </span>
+          </td>
+          <td class="text-xs-right col">
+            <span v-if="props.item.openness == 'ALL'" class="text-success">
+              所有人 <v-icon color="success" small>visibility</v-icon>
+            </span>
+            <span v-if="props.item.openness == 'SELFONLY'" class="text-info">
+              仅自己 <v-icon color="info" small>visibility_off</v-icon>
+            </span>
+          </td>
+          <td class="text-xs-right col">
+            <div class="limit-width">
+              <v-chip
+                v-for="label in props.item.label.split(',')"
+                :color="color[parseInt((label.length * 6) / 6)]"
+                :key="label"
+                small
+              >
+                {{ label }}
+              </v-chip>
             </div>
-          </template>
-          {{ item.subheading }}
-        </v-tooltip>
-      </template>
-      <template v-slot:item.status="{ item }">
-        <span v-if="item.status == 'FORMAL'" class="text-success">
-          发布 <v-icon color="success" small>important_devices</v-icon>
-        </span>
-        <span v-if="item.status == 'DRAFT'" class="text-warning">
-          草稿 <v-icon color="warning" small>speaker_notes</v-icon>
-        </span>
-        <span v-if="item.status == 'DOWN'" class="text-error">
-          下架<v-icon color="error" small>trending_down</v-icon>
-        </span>
-      </template>
-      <template v-slot:item.openness="{ item }">
-        <span v-if="item.openness == 'ALL'" class="text-success">
-          所有人 <v-icon color="success" small>visibility</v-icon>
-        </span>
-        <span v-if="item.openness == 'SELFONLY'" class="text-info">
-          仅自己 <v-icon color="info" small>visibility_off</v-icon>
-        </span>
-      </template>
-      <template v-slot:item.label="{ item }">
-        <div class="limit-width">
-          <v-chip
-            v-for="label in item.label ? item.label.split(',') : []"
-            :key="label"
-            :color="color[parseInt((label.length + 6) % 6)]"
-            small
-          >
-            {{ label }}
-          </v-chip>
-        </div>
-      </template>
-      <template v-slot:item.label="{ item }">
-        <div class="limit-width">
-          <v-chip
-            v-for="label in item.label ? item.label.split(',') : []"
-            :key="label"
-            :color="color[parseInt((label.length + 6) % 6)]"
-            small
-          >
-            {{ label }}
-          </v-chip>
-        </div>
-      </template>
-      <template v-slot:item.command="{ item }">
-        <v-layout justify-center class="mb-2">
-          <v-btn
-            nuxt
-            icon
-            text
-            color="primary"
-            title="预览"
-            :to="'/blog/' + item.id"
-            target="_Blank"
-          >
-            <v-icon>portrait</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            text
-            color="primary"
-            title="编辑"
-            @click="handleEdit(item)"
-          >
-            <v-icon>create</v-icon>
-          </v-btn>
-          <v-btn icon text color="primary" title="上架" @click="handleUp(item)">
-            <v-icon>trending_up</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            text
-            color="primary"
-            title="下架"
-            @click="handleDown(item)"
-          >
-            <v-icon>trending_down</v-icon>
-          </v-btn>
-        </v-layout>
+          </td>
+          <td class="text-xs-right">{{ props.item.categoryName }}</td>
+          <td class="text-xs-right">{{ props.item.authorName }}</td>
+          <td class="text-xs-right col">{{ props.item.createDate }}</td>
+          <td class="text-xs-right">
+            <v-layout justify-center class="mb-2">
+              <v-btn
+                icon
+                flat
+                color="primary"
+                title="预览"
+                @click="handleInfo(props.item)"
+              >
+                <v-icon>portrait</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                flat
+                color="primary"
+                title="编辑"
+                @click="handleEdit(props.item)"
+              >
+                <v-icon>create</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                flat
+                color="primary"
+                title="上架"
+                @click="handleUp(props.item)"
+              >
+                <v-icon>trending_up</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                flat
+                color="primary"
+                title="下架"
+                @click="handleDown(props.item)"
+              >
+                <v-icon>trending_down</v-icon>
+              </v-btn>
+            </v-layout>
+          </td>
+        </tr>
       </template>
     </v-data-table>
-    <div class="pagination">
+    <div class="pagination text-md-right">
       <v-pagination
-        v-model="pagination.page"
+        @input="search"
         circle
         color="primary"
+        v-model="pagination.page"
         :length="length"
-        @input="search"
       ></v-pagination>
     </div>
   </div>
@@ -247,7 +282,6 @@ import {
 
 export default {
   name: "User",
-  layout: "admin",
   data() {
     return {
       searchData: {},
@@ -263,7 +297,7 @@ export default {
         { text: "分类目录", value: "categoryName" },
         { text: "作者", value: "authorName" },
         { text: "创建时间", value: "createDate" },
-        { text: "操作", value: "command" }
+        { text: "操作", value: "" }
       ],
       desserts: [],
       pagination: {
@@ -281,7 +315,7 @@ export default {
       category: [],
       startmenu: false,
       endmenu: false,
-      color: ["primary", "secondary", "success", "info", "warning", "danger"]
+      color: ["info", "success", "primary", "warning", "error", "default"]
     };
   },
   computed: {
@@ -294,52 +328,57 @@ export default {
       set: function() {}
     }
   },
-  async asyncData({ app, query, error }) {
-    const resCategory = await app.$axios.$request(getCategoryList());
-    const category = [];
-    if (resCategory.code === "200") {
-      const de = {};
-      de.text = "请选择分类目录";
-      de.value = "";
-      category.push(de);
-      for (let i = 0; i < resCategory.data.length; i++) {
-        const re = {};
-        re.text = resCategory.data[i].name;
-        re.value = resCategory.data[i].id;
-        category.push(re);
-      }
-    } else {
-      return error({
-        statusCode: resCategory.code,
-        message: resCategory.message
+  created() {
+    //加载数据
+    this.loading = true;
+    this.categoryLoading = true;
+    this.search();
+    getCategoryList()
+      .then(res => {
+        if (res.code === "200") {
+          let de = {};
+          de.text = "请选择分类目录";
+          de.value = "";
+          this.category.push(de);
+          for (var i = 0; i < res.data.length; i++) {
+            let re = {};
+            re.text = res.data[i].name;
+            re.value = res.data[i].id;
+            this.category.push(re);
+          }
+        } else {
+          this.$swal({
+            text: "拉取分类目录信息失败",
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        this.$swal({
+          text: e.message,
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
+      })
+      .finally(() => {
+        this.categoryLoading = false;
       });
-    }
-    const resArticle = await app.$axios.$request(getArticlePageList());
-    const pagination = {};
-    if (resArticle.code === "200") {
-      pagination.page = resArticle.data.currentPage;
-      pagination.rowsPerPage = resArticle.data.pageSize;
-      pagination.totalItems = resArticle.data.total;
-    } else {
-      return error({
-        statusCode: resArticle.code,
-        message: resArticle.message
-      });
-    }
-    return {
-      category: category,
-      desserts: resArticle.data.records,
-      pagination: pagination
-    };
   },
   methods: {
     search() {
       this.loading = true;
-      const searchData = this.searchData;
+      let searchData = this.searchData;
       searchData.pageSize = this.pagination.rowsPerPage;
       searchData.pageNumber = this.pagination.page;
-      this.$axios
-        .$request(getArticlePageList(searchData))
+      getArticlePageList(searchData)
         .then(res => {
           if (res.code === "200") {
             this.desserts = res.data.records;
@@ -358,6 +397,7 @@ export default {
           }
         })
         .catch(e => {
+          console.log(e);
           this.categoryLoading = false;
           this.$swal({
             text: e.message,
@@ -385,11 +425,11 @@ export default {
       }
     },
     handleAdd() {
-      this.$router.push({ path: "/admin/article/add" });
+      this.$router.push({ path: "/article/add" });
     },
     handleEdit(row) {
       this.formVisible = true;
-      this.$router.push({ path: "/admin/article/edit", query: { id: row.id } });
+      this.$router.push({ path: "/article/edit", query: { id: row.id } });
     },
     handleCancel() {
       this.formVisible = false;
@@ -411,7 +451,7 @@ export default {
         showCancelButton: true
       }).then(result => {
         if (result.value) {
-          this.$axios.$request(markArticleDown(row.id)).then(res => {
+          markArticleDown(row.id).then(res => {
             if (res.code === "200" && res.data) {
               this.$swal({
                 title: "操作成功!",
@@ -516,6 +556,6 @@ export default {
   width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-wrap: initial;
+  word-wrap: wrap;
 }
 </style>

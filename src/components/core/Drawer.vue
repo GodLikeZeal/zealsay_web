@@ -62,7 +62,6 @@
                   :to="genChildTarget(item, grand)"
                   :href="grand.href"
                   ripple="ripple"
-                  nuxt
                 >
                   <v-list-item-content>
                     <v-list-item-title>{{ grand.title }}</v-list-item-title>
@@ -78,16 +77,9 @@
                 :disabled="subItem.disabled"
                 :target="subItem.target"
                 ripple="ripple"
-                nuxt
               >
                 <v-list-item-content>
-                  <v-list-item-title
-                    :class="[
-                      $route.name.replace(/-/g, '/') ===
-                      subItem.href.substring(1)
-                        ? 'primary--text child-item'
-                        : 'child-item'
-                    ]"
+                  <v-list-item-title class="child-item"
                     ><span>{{ subItem.title }}</span></v-list-item-title
                   >
                 </v-list-item-content>
@@ -114,7 +106,6 @@
             :disabled="item.disabled"
             :target="item.target"
             rel="noopener"
-            nuxt
           >
             <v-list-item-action v-if="item.icon">
               <v-icon>{{ item.icon }}</v-icon>
@@ -138,19 +129,24 @@
 // Utilities
 import { mapMutations, mapState } from "vuex";
 import menu from "@/api/menu";
+import VuePerfectScrollbar from "vue-perfect-scrollbar";
 
 export default {
+  components: {
+    VuePerfectScrollbar
+  },
   data: () => ({
-    logo: "/image/logo/cat.png",
-    mini: false,
+    logo: "/cat.png",
     menus: menu,
     responsive: false,
+    slider: false,
+    mini: false,
     scrollSettings: {
       maxScrollbarLength: 160
     }
   }),
   computed: {
-    ...mapState("app", ["image", "color", "slider"]),
+    ...mapState("app", ["image", "color"]),
     inputValue: {
       get() {
         return this.$store.state.app.drawer;
@@ -166,7 +162,7 @@ export default {
       return true;
     },
     computeLogo() {
-      return "@/static/m.png";
+      return "/static/m.png";
     },
 
     sideToolbarColor() {
@@ -175,24 +171,18 @@ export default {
   },
   mounted() {
     this.onResponsiveInverted();
-    if (window) {
-      window.addEventListener("resize", this.onResponsiveInverted);
-    }
+    window.addEventListener("resize", this.onResponsiveInverted);
   },
   beforeDestroy() {
-    if (window) {
-      window.removeEventListener("resize", this.onResponsiveInverted);
-    }
+    window.removeEventListener("resize", this.onResponsiveInverted);
   },
   methods: {
     ...mapMutations("app", ["setDrawer", "toggleDrawer"]),
     onResponsiveInverted() {
-      if (window) {
-        if (window.innerWidth < 991) {
-          this.responsive = true;
-        } else {
-          this.responsive = false;
-        }
+      if (window.innerWidth < 991) {
+        this.responsive = true;
+      } else {
+        this.responsive = false;
       }
     },
     genChildTarget(item, subItem) {
@@ -210,7 +200,6 @@ export default {
 
 <style scoped lang="scss">
 #app-drawer {
-  z-index: 0;
   .v-list__tile {
     border-radius: 4px;
 
@@ -230,14 +219,5 @@ export default {
     padding-left: 15px;
     padding-right: 15px;
   }
-}
-.group-item {
-  padding: 0;
-}
-.child-item {
-  padding: 0 1rem;
-}
-#core-view {
-  padding-bottom: 100px;
 }
 </style>

@@ -1,3 +1,5 @@
+import request from "@/util/request";
+
 /**
  * 获取省列表.
  *
@@ -5,10 +7,10 @@
  * @date 2019-03-13  16:13
  */
 export function getProvinceList() {
-  return {
+  return request({
     url: "/api/v1/dict/region/province",
-    method: "get"
-  };
+    method: "GET"
+  });
 }
 
 /**
@@ -18,11 +20,11 @@ export function getProvinceList() {
  * @date 2019-03-13  16:13
  */
 export function getCityList(obj) {
-  return {
+  return request({
     url: "/api/v1/dict/region/city",
-    method: "get",
-    params: obj
-  };
+    method: "GET",
+    data: obj
+  });
 }
 
 /**
@@ -32,9 +34,9 @@ export function getCityList(obj) {
  * @date 2019-03-13  16:13
  */
 export function getAreaList(obj) {
-  return {
+  return request({
     url: "/api/v1/dict/region/area",
-    method: "get",
-    params: obj
-  };
+    method: "GET",
+    data: obj
+  });
 }

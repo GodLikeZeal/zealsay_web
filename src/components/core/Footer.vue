@@ -1,62 +1,38 @@
-<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-footer id="blog-footer">
-    <v-card flat tile class=" accent-4  grey--text text-center" width="100%">
-      <v-card-text>
-        <v-list-item-title avatar>
-          <v-list-item-avatar class="avatar">
-            <v-img :src="logo" height="34" contain />
-          </v-list-item-avatar>
-          <v-list-item-title class="title">
-            zealsay
-          </v-list-item-title>
-        </v-list-item-title>
-      </v-card-text>
-
-      <v-divider></v-divider>
-
-      <v-card-text class="grey--text">
-        <p>
-          Copyright &copy; {{ new Date().getFullYear() }} | All right reserved
-        </p>
-        <p>
-          鄂ICP备17008798号 Powered by
-          <a class="pink--text" href="https://blog.zealsay.com/" target="_blank"
-            >zeal</a
-          >, made with love
-          <v-icon color="pink" size="17">mdi-heart</v-icon>
-        </p>
-      </v-card-text>
-    </v-card>
+<template>
+  <v-footer id="core-footer" absolute height="82">
+    <div class="footer-items">
+      <span v-for="link in links" :key="link.name">
+        <a :href="link.Link" class="tertiary--text footer-links">{{
+          link.name
+        }}</a>
+      </span>
+    </div>
+    <v-spacer />
+    <span class="font-weight-light copyright">
+      &copy;
+      {{ new Date().getFullYear() }}
+      <a href="https://www.creative-tim.com/" target="_blank">zeal</a>, made
+      with love
+      <v-icon color="tertiary" size="17">mdi-heart</v-icon>
+    </span>
   </v-footer>
 </template>
 
 <script>
 export default {
   data: () => ({
-    icons: [
-      { icon: "mdi-facebook", url: "/", info: "facebook" },
-      { icon: "mdi-twitter", url: "/", info: "twitter" },
-      { icon: "mdi-google-plus", url: "/", info: "google" },
-      { icon: "mdi-linkedin", url: "/", info: "linkedin" },
-      { icon: "mdi-instagram", url: "/", info: "instagram" },
-      {
-        icon: "mdi-github-circle",
-        url: "https://github.com/GodLikeZeal",
-        info: "github"
-      },
-      { icon: "mdi-sina-weibo", url: "/", info: "sina" }
-    ],
-    logo: "/image/logo/cat.png"
+    links: [
+      { name: "Home", Link: "/dashboard" },
+      { name: "zeal", Link: "https://www.zealsay.com" },
+      { name: "About Us", Link: "https://www.zealsay.com/about/" },
+      { name: "Blog", Link: "https://www.zealsay.com/category/it/" }
+    ]
   })
 };
 </script>
 
 <style scoped>
-#blog-footer {
-  background-color: initial;
-  height: auto;
-}
-.avatar {
-  margin-right: 0 !important;
+#core-footer {
+  z-index: 0;
 }
 </style>

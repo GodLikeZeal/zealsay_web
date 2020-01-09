@@ -1,20 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-toolbar id="core-toolbar" flat prominent>
-    <!--    <div class="v-toolbar-title">-->
-    <!--      <v-toolbar-title class="tertiary&#45;&#45;text font-weight-light">-->
-    <!--        <v-btn-->
-    <!--          v-if="responsive"-->
-    <!--          class="default v-btn&#45;&#45;simple"-->
-    <!--          icon-->
-    <!--          @click.stop="onClickBtn"-->
-    <!--        >-->
-    <!--          <v-icon>mdi-view-list</v-icon>-->
-    <!--        </v-btn>-->
-    <!--        {{ title }}-->
-    <!--      </v-toolbar-title>-->
-    <!--    </div>-->
-
-    <v-spacer />
+    <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-flex align-center layout py-2>
         <v-text-field
@@ -24,9 +10,9 @@
           hide-details
           color="purple"
         />
-        <router-link v-ripple class="toolbar-items" to="/">
-          <v-icon color="tertiary">mdi-view-dashboard</v-icon>
-        </router-link>
+        <v-btn text icon color="tertiary" to="/">
+          <v-icon>mdi-view-dashboard</v-icon>
+        </v-btn>
         <v-menu
           bottom
           left
@@ -35,19 +21,14 @@
           transition="slide-y-transition"
         >
           <template v-slot:activator="{ on }">
-            <router-link
-              v-ripple
-              class="toolbar-items"
-              to="/dashboard"
-              v-on="on"
-            >
+            <v-btn text icon color="tertiary" v-on="on" to="/">
               <v-badge color="error" overlap>
                 <template slot="badge">
                   {{ notifications.length }}
                 </template>
                 <v-icon color="tertiary">mdi-bell</v-icon>
               </v-badge>
-            </router-link>
+            </v-btn>
           </template>
           <v-card>
             <v-list dense>
@@ -105,7 +86,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import mFilter from "@/components/core/Filter";
 
 export default {
@@ -123,42 +104,45 @@ export default {
     title: null,
     responsive: false,
     responsiveInput: false,
-    avatar: vm.$store.state.auth.user ? vm.$store.state.auth.user.avatar : "",
     items: [
       {
         icon: "mdi-account",
-        href: vm.$store.state.auth.user
-          ? "/user/" + vm.$store.state.auth.user.userId
-          : "",
-        title: "我的主页",
-        click: () => {}
+        href: "#",
+        title: "Profile",
+        click: e => {
+          console.log(e);
+        }
       },
       {
-        icon: "mdi-home",
-        href: "/",
-        title: "回到首页",
-        click: () => {}
+        icon: "settings",
+        href: "#",
+        title: "Settings",
+        click: e => {
+          console.log(e);
+        }
       },
       {
-        icon: "mdi-logout",
-        href: "",
-        title: "退出登录",
+        icon: "fullscreen_exit",
+        href: "#",
+        title: "Logout",
         click: () => {
-          this.$auth.logout("local");
+          vm.logout();
           // window.getApp.$emit('APP_LOGOUT');
         }
       }
     ]
   }),
-  computed: {
-    toolbarColor() {
-      return this.$vuetify.options.extra.mainNav;
-    }
-  },
+
   watch: {
     $route(val) {
       this.title = val.name;
     }
+  },
+  computed: {
+    toolbarColor() {
+      return this.$vuetify.options.extra.mainNav;
+    },
+    ...mapGetters("user", ["name", "avatar", "roles"])
   },
   mounted() {
     this.onResponsiveInverted();
@@ -185,9 +169,9 @@ export default {
         this.responsiveInput = true;
       }
     },
-    async logout() {
-      await this.$auth.logout().then(() => {
-        location.reload(); // In order to re-instantiate the vue-router object to avoid bugs)
+    logout() {
+      this.$store.dispatch("user/LogOut").then(() => {
+        location.reload(); // In order to re-instantiate the vue-router object to avoid bugs
       });
     }
   }
@@ -197,8 +181,5 @@ export default {
 <style scoped>
 #core-toolbar a {
   text-decoration: none;
-}
-#core-toolbar {
-  background: none;
 }
 </style>

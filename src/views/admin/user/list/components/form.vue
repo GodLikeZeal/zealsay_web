@@ -238,20 +238,6 @@ export default {
       return this.alert;
     }
   },
-  async asyncData({ app, query, error }) {
-    const { code, message, data } = await app.$axios.$request(getRoleList());
-    if (code === "200") {
-      const roles = data.map(r => {
-        return {
-          value: r.value,
-          text: r.name
-        };
-      });
-      return { roles: roles };
-    } else {
-      return error({ statusCode: code, message: message });
-    }
-  },
   created() {
     if (!this.roles.length) {
       this.$axios.$request(getRoleList()).then(res => {
@@ -279,7 +265,7 @@ export default {
     handleCancel() {
       this.$emit("handleCancel");
     },
-    handleSubmit(obj) {
+    handleSubmit() {
       this.loading = true;
       this.save();
     },

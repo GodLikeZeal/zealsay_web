@@ -276,38 +276,69 @@ export default {
       };
     }
   },
-  async asyncData({ app, query, error }) {
-    const resProvince = await app.$axios.$request(getProvinceList());
-    let provinces = [];
-    if (resProvince.code === "200") {
-      provinces = resProvince.data.map(r => {
-        return {
-          value: r.code,
-          text: r.name
-        };
+  created() {
+    getProvinceList()
+      .then(res => {
+        if (res.code === "200") {
+          this.province = res.data.map(r => {
+            return {
+              value: r.code,
+              text: r.name
+            };
+          });
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        this.$swal({
+          text: "拉取省份信息失败!",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
       });
-    } else {
-      return error({
-        statusCode: resProvince.code,
-        message: resProvince.message
+    getRoleList()
+      .then(res => {
+        if (res.code === "200") {
+          this.roles = res.data.map(r => {
+            return {
+              value: r.value,
+              text: r.name
+            };
+          });
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        this.$swal({
+          text: "拉取角色信息失败!",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
       });
-    }
-    const resRole = await app.$axios.$request(getRoleList());
-    let roles = [];
-    if (resRole.code === "200") {
-      roles = resRole.data.map(r => {
-        return {
-          value: r.value,
-          text: r.name
-        };
-      });
-    } else {
-      return error({ statusCode: resRole.code, message: resRole.message });
-    }
-    return {
-      province: provinces,
-      roles: roles
-    };
   },
   methods: {
     changeProvince() {

@@ -313,12 +313,12 @@
 
 <script>
 export default {
-  layout: "admin",
+  layout: 'admin',
   data() {
     return {
       dailySalesChart: {
         data: {
-          labels: ["M", "T", "W", "T", "F", "S", "S"],
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
           series: [[12, 17, 7, 17, 23, 18, 38]]
         },
         options: {
@@ -337,7 +337,7 @@ export default {
       },
       dataCompletedTasksChart: {
         data: {
-          labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
+          labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
           series: [[230, 750, 450, 300, 280, 240, 200, 190]]
         },
         options: {
@@ -357,18 +357,18 @@ export default {
       emailsSubscriptionChart: {
         data: {
           labels: [
-            "Ja",
-            "Fe",
-            "Ma",
-            "Ap",
-            "Mai",
-            "Ju",
-            "Jul",
-            "Au",
-            "Se",
-            "Oc",
-            "No",
-            "De"
+            'Ja',
+            'Fe',
+            'Ma',
+            'Ap',
+            'Mai',
+            'Ju',
+            'Jul',
+            'Au',
+            'Se',
+            'Oc',
+            'No',
+            'De'
           ],
           series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
         },
@@ -387,12 +387,12 @@ export default {
         },
         responsiveOptions: [
           [
-            "screen and (max-width: 640px)",
+            'screen and (max-width: 640px)',
             {
               seriesBarDistance: 5,
               axisX: {
                 labelInterpolationFnc: function(value) {
-                  return value[0];
+                  return value[0]
                 }
               }
             }
@@ -402,68 +402,68 @@ export default {
       headers: [
         {
           sortable: false,
-          text: "ID",
-          value: "id"
+          text: 'ID',
+          value: 'id'
         },
         {
           sortable: false,
-          text: "名称",
-          value: "name"
+          text: '名称',
+          value: 'name'
         },
         {
           sortable: false,
-          text: "价值",
-          value: "salary",
-          align: "right"
+          text: '价值',
+          value: 'salary',
+          align: 'right'
         },
         {
           sortable: false,
-          text: "国家",
-          value: "country",
-          align: "right"
+          text: '国家',
+          value: 'country',
+          align: 'right'
         },
         {
           sortable: false,
-          text: "城市",
-          value: "city",
-          align: "right"
+          text: '城市',
+          value: 'city',
+          align: 'right'
         }
       ],
       items: [
         {
-          id: "001",
-          name: "zeal",
-          country: "中国",
-          city: "北京",
-          salary: "$35,738"
+          id: '001',
+          name: 'zeal',
+          country: '中国',
+          city: '北京',
+          salary: '$35,738'
         },
         {
-          id: "002",
-          name: "editor",
-          country: "中国",
-          city: "天津",
-          salary: "$23,738"
+          id: '002',
+          name: 'editor',
+          country: '中国',
+          city: '天津',
+          salary: '$23,738'
         },
         {
-          id: "003",
-          name: "小明",
-          country: "中国",
-          city: "上海",
-          salary: "$56,142"
+          id: '003',
+          name: '小明',
+          country: '中国',
+          city: '上海',
+          salary: '$56,142'
         },
         {
-          id: "004",
-          name: "桔梗",
-          country: "日本",
-          city: "大阪",
-          salary: "$38,735"
+          id: '004',
+          name: '桔梗',
+          country: '日本',
+          city: '大阪',
+          salary: '$38,735'
         },
         {
-          id: "005",
-          name: "山的那边",
-          country: "中国",
-          city: "武汉",
-          salary: "$63,542"
+          id: '005',
+          name: '山的那边',
+          country: '中国',
+          city: '武汉',
+          salary: '$63,542'
         }
       ],
       tabs: 0,
@@ -472,12 +472,12 @@ export default {
         1: false,
         2: false
       }
-    };
+    }
   },
   methods: {
     complete(index) {
-      this.list[index] = !this.list[index];
+      this.list[index] = !this.list[index]
     }
   }
-};
+}
 </script>

@@ -1,7 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fill-height fluid grid-list-xl>
-    <v-row class="justify-center">
-      <v-col cols="10">
+    <v-layout wrap justify-center>
+      <v-flex xs12 md10>
         <material-card
           color="primary"
           title="标签云管理"
@@ -14,13 +14,13 @@
               clear-icon="close"
               clearable
               type="text"
-              color="primary"
+              color="purple"
               @keyup.enter="search"
             >
               <template v-slot:prepend>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn text icon color="primary" @click="add">
+                    <v-btn flat icon color="primary" @click="add">
                       <v-icon v-on="on">add</v-icon>
                     </v-btn>
                   </template>
@@ -30,7 +30,7 @@
               <template v-slot:append-outer>
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <v-btn text icon color="primary" @click="search">
+                    <v-btn flat icon color="primary" @click="search">
                       <v-icon v-on="on">search</v-icon>
                     </v-btn>
                   </template>
@@ -41,20 +41,19 @@
           </v-card-title>
           <v-card-text>
             <v-chip
-              v-for="label in labels"
-              :key="label.id"
               close
               :color="label.outColor"
               text-color="white"
-              class="chip-label"
+              v-for="label in labels"
+              :key="label.id"
               @input="remove(label.id)"
             >
               <v-avatar v-if="label.icon.startsWith('http')">
                 <img :src="label.icon" alt="trevor" />
               </v-avatar>
               <v-avatar
-                v-else-if="label.icon === ''"
                 :class="label.avatarColor"
+                v-else-if="label.icon === ''"
               >
                 {{ label.name.charAt(0).toUpperCase() }}
               </v-avatar>
@@ -72,18 +71,17 @@
             @handleCancelAdd="handleCancelAdd"
           ></add-form>
         </div>
-      </v-col>
-    </v-row>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
 <script>
-import addForm from "./components/addForm";
 import { getArticleLabelPage, deleteArticleLabel } from "@/api/article";
+import addForm from "./components/addForm";
 
 export default {
-  name: "ArticleLabel",
-  layout: "admin",
+  name: "articleLabel",
   components: { addForm },
   data: () => ({
     search_text: "",
@@ -91,25 +89,14 @@ export default {
     labels: [],
     addFormVisible: false
   }),
-  async asyncData({ app, query, error }) {
-    const resArticleLabel = await app.$axios.$request(getArticleLabelPage());
-    if (resArticleLabel.code === "200") {
-      const labels = resArticleLabel.data.records;
-      const total = resArticleLabel.data.total;
-      return { labels: labels, total: total };
-    } else {
-      return error({
-        statusCode: resArticleLabel.code,
-        message: resArticleLabel.message
-      });
-    }
+  created() {
+    this.search();
   },
   methods: {
     search() {
-      const serachData = {};
+      let serachData = {};
       serachData.name = this.search_text;
-      this.$axios
-        .$request(getArticleLabelPage(serachData))
+      getArticleLabelPage(serachData)
         .then(res => {
           if (res.code === "200") {
             this.labels = res.data.records;
@@ -126,6 +113,7 @@ export default {
           }
         })
         .catch(e => {
+          console.log(e);
           this.$swal({
             text: e.message,
             type: "error",
@@ -144,8 +132,7 @@ export default {
       this.addFormVisible = false;
     },
     remove(id) {
-      this.$axios
-        .$request(deleteArticleLabel(id))
+      deleteArticleLabel(id)
         .then(res => {
           if (res.code === "200") {
             this.search();
@@ -161,6 +148,7 @@ export default {
           }
         })
         .catch(e => {
+          console.log(e);
           this.$swal({
             text: e.message,
             type: "error",
@@ -176,8 +164,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.chip-label {
-  margin: 0.2rem;
-}
-</style>
+<style scoped></style>

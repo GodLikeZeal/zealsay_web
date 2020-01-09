@@ -10,8 +10,8 @@
     transition="slide-y-transition"
   >
     <template v-slot:activator="{ on }">
-      <v-btn text icon class="toolbar-items" v-on="on">
-        <v-icon color="tertiary">mdi-settings</v-icon>
+      <v-btn text icon v-on="on" color="tertiary">
+        <v-icon>mdi-settings</v-icon>
       </v-btn>
     </template>
     <v-card>

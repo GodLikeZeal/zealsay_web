@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="600" persistent>
+  <v-dialog width="600" persistent v-model="dialog">
     <v-card ref="row">
       <v-card-text>
         <v-form ref="form" lazy-validation>
@@ -7,8 +7,8 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.name"
                   label="名称*"
+                  v-model="form.name"
                   :rules="nameRules"
                   type="text"
                   required
@@ -16,8 +16,8 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.value"
                   label="value*"
+                  v-model="form.value"
                   :rules="valueRules"
                   type="text"
                   required
@@ -25,8 +25,8 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.description"
                   label="描述"
+                  v-model="form.description"
                   type="text"
                 ></v-text-field>
               </v-flex>
@@ -36,9 +36,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn outlined color="darken-1" @click="handleCancel">取消</v-btn>
+        <v-btn outline color="darken-1" @click="handleCancel">取消</v-btn>
         <v-btn
-          outlined
+          outline
           :loading="loading"
           color="primary darken-1"
           @click="handleSubmit"
@@ -54,15 +54,8 @@ import { validateValue, validateUsername } from "@/util/validate";
 import { addRole } from "@/api/role";
 
 export default {
-  name: "Add",
-  props: {
-    alert: {
-      type: Boolean,
-      default: function() {
-        return {};
-      }
-    }
-  },
+  name: "add",
+  props: ["alert"],
   data: () => ({
     name: "add",
     loading: false,
@@ -90,7 +83,7 @@ export default {
     },
     handleSubmit() {
       this.loading = true;
-      // 开始提交
+      //开始提交
       if (this.$refs.form.validate()) {
         addRole(this.form)
           .then(res => {

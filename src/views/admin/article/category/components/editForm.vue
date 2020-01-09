@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="600" persistent>
+  <v-dialog width="600" persistent v-model="dialog">
     <v-card ref="row">
       <v-card-text>
         <v-form ref="form" lazy-validation>
@@ -7,8 +7,8 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.name"
                   label="名称*"
+                  v-model="form.name"
                   :rules="nameRules"
                   type="text"
                   required
@@ -16,8 +16,8 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.value"
                   label="value*"
+                  v-model="form.value"
                   :rules="valueRules"
                   type="text"
                   required
@@ -25,8 +25,8 @@
               </v-flex>
               <v-flex xs12>
                 <v-text-field
-                  v-model="form.description"
                   label="描述"
+                  v-model="form.description"
                   type="text"
                 ></v-text-field>
               </v-flex>
@@ -54,21 +54,8 @@ import { validateValue, validateUsername } from "@/util/validate";
 import { updateRole } from "@/api/role";
 
 export default {
-  name: "Edit",
-  props: {
-    alert: {
-      type: Boolean,
-      default: function() {
-        return {};
-      }
-    },
-    row: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    }
-  },
+  name: "edit",
+  props: ["row", "alert"],
   data: () => ({
     name: "edit",
     loading: false,
@@ -103,10 +90,9 @@ export default {
     },
     handleSubmit() {
       this.loading = true;
-      // 开始提交
+      //开始提交
       if (this.$refs.form.validate()) {
-        this.$axios
-          .$request(updateRole(this.form))
+        updateRole(this.form)
           .then(res => {
             this.loading = false;
             if (res.code === "200" && res.data) {
