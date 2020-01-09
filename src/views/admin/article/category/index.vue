@@ -61,31 +61,31 @@
                         <v-form ref="form" lazy-validation>
                           <v-flex xs12 sm12 md12>
                             <v-text-field
+                              v-model="selected.name"
                               persistent-hint
                               :rules="usernameRules"
                               hint="用于区分博客的分类目录"
                               label="分类名称"
-                              v-model="selected.name"
                               required
                               outline
                             ></v-text-field>
                           </v-flex>
                           <v-flex xs12 sm12 md12>
                             <v-text-field
+                              v-model="selected.alias"
                               persistent-hint
                               :rules="aliasRules"
                               hint="别名，用于URL上展示更优雅，可以为小写字母加上“-”"
                               label="alias"
-                              v-model="selected.alias"
                               required
                               outline
                             ></v-text-field>
                           </v-flex>
                           <v-flex xs12 sm12 md12>
                             <v-text-field
+                              v-model="selected.description"
                               persistent-hint
                               label="描述"
-                              v-model="selected.description"
                               outline
                             ></v-text-field>
                           </v-flex>
@@ -103,7 +103,7 @@
     <div>
       <add-form
         :alert="addFormVisible"
-        :parentId="parentId"
+        :parent-id="parentId"
         :selected="selected"
         @handleCancel="handleCancelAdd"
       ></add-form>
@@ -112,12 +112,13 @@
 </template>
 
 <script>
+import addForm from "./components/addForm";
 import { getCategoryList, updateCategory, deleteCategory } from "@/api/article";
 import { validateAlias, validateUsername } from "@/util/validate";
-import addForm from "./components/addForm";
 
 export default {
-  name: "category",
+  name: "Category",
+  layout: "admin",
   components: { addForm },
   data: () => ({
     addFormVisible: false,
@@ -145,9 +146,19 @@ export default {
       ];
     },
     selected() {
-      if (!this.active.length) return {};
+      if (!this.active.length)
+        return {
+          name: "",
+          alias: ""
+        };
       const id = this.active[0];
       if (id === undefined) {
+        return {
+          name: "分类目录",
+          alias: "alias"
+        };
+      }
+      if (this.categorys.find(category => category.id === id) === undefined) {
         return {
           name: "分类目录",
           alias: "alias"
@@ -160,12 +171,19 @@ export default {
       return this.active[0];
     }
   },
-  created() {
-    this.refresh();
+  async asyncData({ app, query, error }) {
+    const res = await app.$axios.$request(getCategoryList());
+    if (res.code === "200") {
+      const categorys = res.data;
+      return { categorys: categorys };
+    } else {
+      return error({ statusCode: res.code, message: res.message });
+    }
   },
   methods: {
     refresh() {
-      getCategoryList()
+      this.$axios
+        .$request(getCategoryList())
         .then(res => {
           if (res.code === "200" && res.data) {
             this.categorys = res.data;
@@ -193,7 +211,8 @@ export default {
     },
     editSubmit(obj) {
       if (this.$refs.form.validate()) {
-        updateCategory(obj)
+        this.$axios
+          .$request(updateCategory(obj))
           .then(res => {
             if (res.code === "200" && res.data) {
               this.$swal({
@@ -229,7 +248,7 @@ export default {
     },
     handleDelete(obj) {
       if (this.$refs.form.validate()) {
-        let id = obj.id;
+        const id = obj.id;
         if (id === undefined) {
           this.$swal({
             text: "根目录无法删除",
@@ -241,7 +260,8 @@ export default {
           });
           return;
         }
-        deleteCategory(id)
+        this.$axios
+          .$request(deleteCategory(id))
           .then(res => {
             if (res.code === "200" && res.data) {
               this.$swal({

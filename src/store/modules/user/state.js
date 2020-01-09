@@ -1,4 +1,4 @@
-import { getToken, setToken, removeToken } from "@/util/auth";
+import { getToken } from "@/util/auth";
 
 export default {
   user: "",

@@ -35,6 +35,7 @@ router.beforeEach((to, from, next) => {
           .then(res => {
             // 拉取user_info
             const roles = res.data.roles; // note: roles must be a array! such as: ['editor','develop']
+            console.log(roles);
             // store.dispatch('GenerateRoutes', { roles }).then(() => { // 根据roles权限生成可访问的路由表
             //   router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }); // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
@@ -43,6 +44,7 @@ router.beforeEach((to, from, next) => {
           .catch(error => {
             store.dispatch("user/FedLogOut").then(() => {
               // Message.error(err || 'Verification failed, please login again')
+              console.log(error);
               next({ path: "/" });
             });
           });

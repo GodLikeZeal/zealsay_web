@@ -408,8 +408,7 @@ export default {
       const searchData = this.searchData;
       searchData.pageSize = this.pagination.rowsPerPage;
       searchData.pageNumber = this.pagination.page;
-      this.$axios
-        .$request(getUserList(searchData))
+      getUserList(searchData)
         .then(res => {
           if (res.code === "200") {
             this.desserts = res.data.records;

@@ -9,7 +9,7 @@ import request from "@/util/request";
 export function getProvinceList() {
   return request({
     url: "/api/v1/dict/region/province",
-    method: "GET"
+    method: "get"
   });
 }
 
@@ -22,8 +22,8 @@ export function getProvinceList() {
 export function getCityList(obj) {
   return request({
     url: "/api/v1/dict/region/city",
-    method: "GET",
-    data: obj
+    method: "get",
+    params: obj
   });
 }
 
@@ -36,7 +36,7 @@ export function getCityList(obj) {
 export function getAreaList(obj) {
   return request({
     url: "/api/v1/dict/region/area",
-    method: "GET",
-    data: obj
+    method: "get",
+    params: obj
   });
 }

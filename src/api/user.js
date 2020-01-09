@@ -14,6 +14,18 @@ export function getUserList(obj) {
   });
 }
 /**
+ * 获取用户信息.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function getUserById(id) {
+  return request({
+    url: "/api/v1/user/" + id,
+    method: "GET"
+  });
+}
+/**
  * 后台添加用户.
  *
  * @author  zhanglei
@@ -91,14 +103,14 @@ export function unsealingUser(obj) {
 }
 
 /**
- * 根据id查询用户名是否被使用.
+ * 查询用户名是否被使用.
  *
  * @author  zhanglei
  * @date 2019-03-13  16:16
  */
 export function getIsInUseByUsername(obj) {
   return request({
-    url: "/use/username/" + obj.username,
+    url: "/api/v1/user/use/username/" + obj.username,
     method: "GET",
     data: obj.id
   });
@@ -112,7 +124,7 @@ export function getIsInUseByUsername(obj) {
  */
 export function getIsInUseByPhone(obj) {
   return request({
-    url: "/use/phone/" + obj.phoneNumber,
+    url: "/api/v1/user/use/phone/" + obj.phoneNumber,
     method: "GET",
     data: obj.id
   });
@@ -126,9 +138,37 @@ export function getIsInUseByPhone(obj) {
  */
 export function getIsInUseByEmail(obj) {
   return request({
-    url: "/use/email/" + obj.email,
+    url: "/api/v1/user/use/email/" + obj.email,
     method: "GET",
     data: obj.id
+  });
+}
+
+/**
+ * 用户注册.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:16
+ */
+export function register(obj) {
+  return request({
+    url: "/api/v1/user/register",
+    method: "POST",
+    data: obj
+  });
+}
+
+/**
+ * 用户注册邮件确认.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:16
+ */
+export function confirmEmail(obj) {
+  return request({
+    url: "/api/v1/user/confirm/email",
+    method: "POST",
+    params: obj
   });
 }
 
@@ -141,10 +181,48 @@ export function getIsInUseByEmail(obj) {
 export function uploadImage(obj) {
   return request({
     url: "/api/v1/qiniu/upload",
-    method: "upload",
-    data: obj
+    method: "post",
+    data: obj,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
   });
 }
+
+/**
+ * 头像上传.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:16
+ */
+export function uploadAvatar(obj) {
+  return request({
+    url: "/api/v1/qiniu/upload/avatar",
+    method: "post",
+    data: obj,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}
+
+/**
+ * 文章图片上传.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:16
+ */
+export function uploadArticle(obj) {
+  return request({
+    url: "/api/v1/qiniu/upload/article",
+    method: "post",
+    data: obj,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}
+
 /**
  * 图片批量上传.
  *
@@ -154,7 +232,48 @@ export function uploadImage(obj) {
 export function uploadImageMultiple(obj) {
   return request({
     url: "/api/v1/qiniu/upload/multiple",
-    method: "upload",
-    data: obj
+    method: "post",
+    data: obj,
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}
+/**
+ * 获取当前用户发表的博客.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function getCurrentUserBlog(obj) {
+  return request({
+    url: "/api/v1/user/blog",
+    method: "get",
+    params: obj
+  });
+}
+/**
+ * 获取当前用户发表的博客.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function getCurrentUserLikeBlog(obj) {
+  return request({
+    url: "/api/v1/user/like",
+    method: "get",
+    params: obj
+  });
+}
+/**
+ * 获取当前用户所.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function getCurrentUserActions() {
+  return request({
+    url: "/api/v1/user/action/timelines",
+    method: "get"
   });
 }

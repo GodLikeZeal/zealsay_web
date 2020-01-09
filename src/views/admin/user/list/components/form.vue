@@ -240,7 +240,7 @@ export default {
   },
   created() {
     if (!this.roles.length) {
-      this.$axios.$request(getRoleList()).then(res => {
+      getRoleList().then(res => {
         if (res.code === "200") {
           this.roles = res.data.map(r => {
             return {
@@ -271,8 +271,7 @@ export default {
     },
     save() {
       // 开始提交
-      this.$axios
-        .$request(editUser(this.form))
+      editUser(this.form)
         .then(res => {
           if (res.code === "200" && res.data) {
             this.$swal({
@@ -351,8 +350,7 @@ export default {
         const file = data;
         const param = new FormData();
         param.append("file", file);
-        this.$axios
-          .$request(uploadAvatar(param))
+        uploadAvatar(param)
           .then(res => {
             if (res.code === "200") {
               this.row.avatar = res.data;

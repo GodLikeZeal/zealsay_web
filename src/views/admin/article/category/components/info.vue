@@ -24,11 +24,11 @@
         <v-card-title>
           <div class="row center">
             <span class="indigo--text text-detail">{{ row.age }} 岁</span>
-            <span class="text-detail" v-if="row.sex == 1" title="男"
-              ><img width="15px" src="../../../../assets/sex/boy.png"
+            <span v-if="row.sex == 1" class="text-detail" title="男"
+              ><img width="15px" src="/assets/image/sex/boy.png"
             /></span>
-            <span class="text-detail" v-if="row.sex == 0" title="女"
-              ><img width="15px" src="../../../../assets/sex/girl.png"
+            <span v-if="row.sex == 0" class="text-detail" title="女"
+              ><img width="15px" src="/assets/image/sex/girl.png"
             /></span>
             <span class="indigo--text text-detail">{{ row.username }}</span>
           </div>
@@ -71,8 +71,8 @@
               <span class="text-detail">TA的标签</span>
               <v-chip
                 v-for="label in row.label.split(',')"
-                :color="color[parseInt(Math.random() * 6, 10)]"
                 :key="label"
+                :color="color[parseInt(Math.random() * 6, 10)]"
                 small
               >
                 <v-avatar>
@@ -94,32 +94,45 @@
 
 <script>
 export default {
-  name: "info",
-  props: ["row", "alert"],
+  name: "Info",
+  props: {
+    alert: {
+      type: Boolean,
+      default: function() {
+        return {};
+      }
+    },
+    row: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data: () => ({
     icon: [
-      require("@/assets/food/南瓜.png"),
-      require("@/assets/food/吐司.png"),
-      require("@/assets/food/夏威夷果.png"),
-      require("@/assets/food/山楂片.png"),
-      require("@/assets/food/开心果.png"),
-      require("@/assets/food/抹茶麻薯.png"),
-      require("@/assets/food/杏仁.png"),
-      require("@/assets/food/板栗.png"),
-      require("@/assets/food/柠檬干.png"),
-      require("@/assets/food/炭烤肠.png"),
-      require("@/assets/food/猪肉铺.png"),
-      require("@/assets/food/瓜子.png"),
-      require("@/assets/food/芒果干.png"),
-      require("@/assets/food/花生.png"),
-      require("@/assets/food/草莓干.png"),
-      require("@/assets/food/蒸蛋糕.png"),
-      require("@/assets/food/蚕豆.png"),
-      require("@/assets/food/蛋黄酥.png"),
-      require("@/assets/food/辣条.png"),
-      require("@/assets/food/鱿鱼仔.png")
+      require("@/static/image/food/南瓜.png"),
+      require("@/static/image/food/吐司.png"),
+      require("@/static/image/food/夏威夷果.png"),
+      require("@/static/image/food/山楂片.png"),
+      require("@/static/image/food/开心果.png"),
+      require("@/static/image/food/抹茶麻薯.png"),
+      require("@/static/image/food/杏仁.png"),
+      require("@/static/image/food/板栗.png"),
+      require("@/static/image/food/柠檬干.png"),
+      require("@/static/image/food/炭烤肠.png"),
+      require("@/static/image/food/猪肉铺.png"),
+      require("@/static/image/food/瓜子.png"),
+      require("@/static/image/food/芒果干.png"),
+      require("@/static/image/food/花生.png"),
+      require("@/static/image/food/草莓干.png"),
+      require("@/static/image/food/蒸蛋糕.png"),
+      require("@/static/image/food/蚕豆.png"),
+      require("@/static/image/food/蛋黄酥.png"),
+      require("@/static/image/food/辣条.png"),
+      require("@/static/image/food/鱿鱼仔.png")
     ],
-    color: ["info", "success", "primary", "warning", "error", "default"]
+    color: ["info", "success", "primary", "warning", "error", "admin.vue"]
   })
 };
 </script>

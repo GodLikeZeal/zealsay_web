@@ -1,5 +1,5 @@
 <template>
-  <v-dialog width="600" persistent v-model="dialog">
+  <v-dialog v-model="dialog" width="600" persistent>
     <v-card ref="row">
       <v-card-text>
         <v-form ref="form" lazy-validation>
@@ -7,22 +7,22 @@
             <v-layout wrap>
               <v-flex xs6>
                 <v-text-field
-                  label="名称*"
                   v-model="form.name"
+                  label="名称*"
                   :rules="nameRules"
                   hint="标识标签，如:docker"
                   type="text"
                   required
                 ></v-text-field>
                 <v-text-field
-                  label="图标"
                   v-model="form.icon"
+                  label="图标"
                   hint="图标，如:mdi-docker,如不选，则取名称的第一个字符！"
                   type="text"
                 ></v-text-field>
                 <v-select
-                  label="标签颜色"
                   v-model="form.outColor"
+                  label="标签颜色"
                   :rules="colorRules"
                   :items="outColors"
                   item-avatar="icon"
@@ -45,18 +45,18 @@
                   <h5 class=" font-weight-light">标签预览</h5>
                   <v-chip :color="form.outColor" text-color="white">
                     <v-avatar
-                      :class="form.avatarColor"
                       v-if="form.icon.startsWith('http')"
+                      :class="form.avatarColor"
                     >
                       <img :src="form.icon" alt="avatar" />
                     </v-avatar>
                     <v-avatar
-                      :class="form.avatarColor"
                       v-else-if="form.icon === ''"
+                      :class="form.avatarColor"
                     >
                       {{ form.name.charAt(0).toUpperCase() }}
                     </v-avatar>
-                    <v-avatar :class="form.avatarColor" v-else>
+                    <v-avatar v-else :class="form.avatarColor">
                       <v-icon>{{ form.icon }}</v-icon>
                     </v-avatar>
                     {{ form.name }}
@@ -101,8 +101,15 @@
 import { addArticleLabel } from "@/api/article";
 
 export default {
-  name: "add",
-  props: ["alert"],
+  name: "Add",
+  props: {
+    alert: {
+      type: Boolean,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data: () => ({
     name: "add",
     loading: false,
@@ -154,9 +161,10 @@ export default {
     },
     handleSubmit() {
       this.loading = true;
-      //开始提交
+      // 开始提交
       if (this.$refs.form.validate()) {
-        addArticleLabel(this.form)
+        this.$axios
+          .$request(addArticleLabel(this.form))
           .then(res => {
             this.loading = false;
             if (res.code === "200" && res.data) {

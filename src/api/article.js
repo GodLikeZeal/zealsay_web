@@ -106,7 +106,21 @@ export function getArticlePageList(obj) {
   return request({
     url: "/api/v1/article/page",
     method: "get",
-    data: obj
+    params: obj
+  });
+}
+
+/**
+ * 分页查询文章列表.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function getArticlePageListToC(obj) {
+  return request({
+    url: "/api/v1/article/c/page",
+    method: "get",
+    params: obj
   });
 }
 
@@ -146,7 +160,7 @@ export function getArticleLabelPage(obj) {
   return request({
     url: "/api/v1/article/label/page",
     method: "get",
-    data: obj
+    params: obj
   });
 }
 
@@ -201,5 +215,55 @@ export function deleteArticleLabel(id) {
   return request({
     url: "/api/v1/article/label/" + id,
     method: "delete"
+  });
+}
+
+/**
+ * 阅读数增加1.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function readArticle(id) {
+  return request({
+    url: "/api/v1/article/read/" + id,
+    method: "get"
+  });
+}
+
+/**
+ * 查询是否喜欢过该文章.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function isLikeArticle(id) {
+  return request({
+    url: "/api/v1/article/islike/" + id,
+    method: "get"
+  });
+}
+/**
+ * 喜欢该文章.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function likeArticle(id) {
+  return request({
+    url: "/api/v1/article/like/" + id,
+    method: "get"
+  });
+}
+/**
+ * 取消喜欢该文章.
+ *
+ * @author  zhanglei
+ * @date 2019-03-13  16:13
+ */
+export function disLikeArticle(id) {
+  return request({
+    url: "/api/v1/article/dislike/" + id,
+    method: "get"
   });
 }

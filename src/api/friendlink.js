@@ -1,3 +1,5 @@
+import request from "@/util/request";
+
 /**
  * 获取友链列表.
  *
@@ -5,10 +7,10 @@
  * @date 2019-03-13  16:13
  */
 export function getFriendLinkList() {
-  return {
+  return request({
     url: "/api/v1/friend/link/page",
     method: "get"
-  };
+  });
 }
 
 /**
@@ -18,11 +20,11 @@ export function getFriendLinkList() {
  * @date 2019-03-13  16:13
  */
 export function saveFriendLink(obj) {
-  return {
+  return request({
     url: "/api/v1/friend/link",
     method: "post",
     data: obj
-  };
+  });
 }
 
 /**
@@ -32,11 +34,11 @@ export function saveFriendLink(obj) {
  * @date 2019-03-13  16:13
  */
 export function updateFriendLinkById(obj) {
-  return {
+  return request({
     url: "/api/v1/friend/link",
     method: "put",
     data: obj
-  };
+  });
 }
 /**
  * 根据id修改一条友链.
@@ -45,8 +47,8 @@ export function updateFriendLinkById(obj) {
  * @date 2019-03-13  16:13
  */
 export function deleteFriendLinkById(id) {
-  return {
+  return request({
     url: "/api/v1/friend/link/" + id,
     method: "delete"
-  };
+  });
 }

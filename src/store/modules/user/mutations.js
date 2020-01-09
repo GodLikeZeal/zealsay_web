@@ -1,4 +1,4 @@
-import { set, toggle } from "@/util/vuex";
+import { set } from "@/util/vuex";
 
 export default {
   SET_CODE: set("code"),

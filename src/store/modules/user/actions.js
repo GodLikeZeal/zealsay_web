@@ -1,14 +1,6 @@
 // https://vuex.vuejs.org/en/actions.html
 import { loginByUsername, logout, getUserInfo } from "@/api/login";
-import { getToken, setToken, removeToken } from "@/util/auth";
-
-import {
-  SET_TOKEN,
-  SET_ROLES,
-  SET_NAME,
-  SET_AVATAR,
-  SET_INTRODUCTION
-} from "./mutations";
+import { setToken, removeToken } from "@/util/auth";
 
 export default {
   // 用户名登录

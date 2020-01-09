@@ -1,11 +1,7 @@
 import request from "@/util/request";
 import qs from "qs";
 
-export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
-  };
+export function loginByUsername(data) {
   return request({
     url: "/api/v1/authentication/login",
     method: "post",
