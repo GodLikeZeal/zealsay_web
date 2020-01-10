@@ -5,8 +5,10 @@ Vue.use(VueSweetalert2, {
   buttonsStyling: false,
   heightAuto: false,
   grow: true,
-  confirmButtonClass: "mx-4 v-btn v-btn--round primary",
+  confirmButtonClass:
+    "v-btn btn-alert v-btn--depressed v-btn--flat v-btn--outlined v-btn--round theme--light v-size--small text-primary text--darken-1",
   confirmButtonText: "确定",
-  cancelButtonClass: "mx-4 v-btn v-btn--round default",
+  cancelButtonClass:
+    "v-btn btn-alert v-btn--depressed v-btn--flat v-btn--outlined v-btn--round theme--light v-size--small darken-1--text",
   cancelButtonText: "取消"
 });

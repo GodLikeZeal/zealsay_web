@@ -1,24 +1,24 @@
 <template>
-  <div id="appRoot">
-    <template v-if="!$route.meta.public">
-      <v-app>
-        <!--<core-filter/>-->
+  <transition>
+    <keep-alive>
+      <div id="appRoot">
+        <v-app>
+          <template v-if="$route.meta.public">
+            <router-view></router-view>
+          </template>
+          <template v-else>
+            <!--<core-filter/>-->
 
-        <core-toolbar />
+            <core-toolbar />
 
-        <core-drawer />
+            <core-drawer />
 
-        <core-view />
-      </v-app>
-    </template>
-    <template v-else>
-      <transition>
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
-      </transition>
-    </template>
-  </div>
+            <core-view />
+          </template>
+        </v-app>
+      </div>
+    </keep-alive>
+  </transition>
 </template>
 
 <script></script>

@@ -113,8 +113,7 @@
       class="elevation-1"
     >
       <template v-slot:no-data>
-        <p class="text-md-center teal--text">
-          <v-icon>sentiment_satisfied_alt</v-icon>
+        <p class="text-center teal--text">
           已经找遍了，再怎么找也找不到啦！
         </p>
       </template>
@@ -131,7 +130,9 @@
       <template v-slot:item.title="{ item }">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <div class="limit-width" v-on="on">{{ item.title }}</div>
+            <div class="limit-width text-truncate" v-on="on">
+              {{ item.title }}
+            </div>
           </template>
           {{ item.title }}
         </v-tooltip>
@@ -139,7 +140,7 @@
       <template v-slot:item.subheading="{ item }">
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <div class="limit-width" v-on="on">
+            <div class="limit-width text-truncate" v-on="on">
               {{ item.subheading }}
             </div>
           </template>
@@ -189,10 +190,19 @@
           </v-chip>
         </div>
       </template>
+      <template v-slot:item.createDate="{ item }">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <div class="limit-width text-truncate" v-on="on">
+              {{ item.createDate }}
+            </div>
+          </template>
+          {{ item.createDate }}
+        </v-tooltip>
+      </template>
       <template v-slot:item.command="{ item }">
         <v-layout justify-center class="mb-2">
           <v-btn
-            nuxt
             icon
             text
             color="primary"
@@ -254,16 +264,16 @@ export default {
       selected: [],
       loading: true,
       headers: [
-        { text: "文章封面", value: "coverImage" },
+        { text: "封面", value: "coverImage" },
         { text: "标题", value: "title" },
         { text: "副标题", value: "subheading" },
         { text: "状态", value: "status" },
         { text: "公开度", value: "openness" },
-        { text: "标签", value: "label" },
+        // { text: "标签", value: "label" },
         { text: "分类目录", value: "categoryName" },
         { text: "作者", value: "authorName" },
         { text: "创建时间", value: "createDate" },
-        { text: "操作", value: "command" }
+        { text: "操作", value: "command", align: "center" }
       ],
       desserts: [],
       pagination: {
@@ -295,10 +305,11 @@ export default {
     }
   },
   created() {
+    this.search();
     getCategoryList()
       .then(res => {
         if (res.code === "200") {
-          let categorys;
+          let categorys = [];
           const de = {};
           de.text = "请选择分类目录";
           de.value = "";
@@ -322,7 +333,6 @@ export default {
         }
       })
       .catch(() => {
-        this.categoryLoading = false;
         this.$swal({
           text: "拉取文章分类失败",
           type: "error",

@@ -1,20 +1,51 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-footer id="blog-footer">
-    <v-card flat tile class=" accent-4  grey--text text-center" width="100%">
+  <v-footer id="blog-footer" padless>
+    <v-card
+      flat
+      tile
+      class="primary accent-4  white--text text-center"
+      width="100%"
+    >
+      <!--      <live2d></live2d>-->
       <v-card-text>
         <v-list-item-title avatar>
-          <v-list-item-avatar class="avatar">
+          <v-list-item-avatar color="white" class="avatar">
             <v-img :src="logo" height="34" contain />
           </v-list-item-avatar>
-          <v-list-item-title class="title">
+          <v-list-item-title class="title white--text">
             zealsay
           </v-list-item-title>
         </v-list-item-title>
       </v-card-text>
+      <v-card-text>
+        <i v-for="icon in icons" :key="icon.id">
+          <template>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  class="mx-3 white--text"
+                  icon
+                  target="_Blank"
+                  :href="icon.url"
+                >
+                  <v-icon size="24px" v-on="on">{{ icon.icon }}</v-icon>
+                </v-btn>
+              </template>
+              {{ icon.info }}
+            </v-tooltip>
+          </template>
+        </i>
+      </v-card-text>
+
+      <v-card-text class="white--text" style="display: block">
+        <p class="title font-weight-light">
+          勇敢且善良.
+        </p>
+      </v-card-text>
 
       <v-divider></v-divider>
 
-      <v-card-text class="grey--text">
+      <v-card-text class="white--text">
         <p>
           Copyright &copy; {{ new Date().getFullYear() }} | All right reserved
         </p>
@@ -31,6 +62,7 @@
 </template>
 
 <script>
+// import Live2d from "@/components/core/Live2d";
 export default {
   data: () => ({
     icons: [
@@ -52,10 +84,6 @@ export default {
 </script>
 
 <style scoped>
-#blog-footer {
-  background-color: initial;
-  height: auto;
-}
 .avatar {
   margin-right: 0 !important;
 }

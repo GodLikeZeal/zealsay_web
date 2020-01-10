@@ -171,14 +171,33 @@ export default {
       return this.active[0];
     }
   },
-  async asyncData({ app, query, error }) {
-    const res = await app.$axios.$request(getCategoryList());
-    if (res.code === "200") {
-      const categorys = res.data;
-      return { categorys: categorys };
-    } else {
-      return error({ statusCode: res.code, message: res.message });
-    }
+
+  created() {
+    getCategoryList()
+      .then(res => {
+        if (res.code === "200") {
+          this.categorys = res.data;
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(() => {
+        this.$swal({
+          text: "拉取文章分类失败",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
+      });
   },
   methods: {
     refresh() {

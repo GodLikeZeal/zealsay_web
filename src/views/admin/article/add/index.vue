@@ -38,24 +38,22 @@
                       </template>
                       <v-card>
                         <v-card-title>
-                          <client-only>
-                            <div style="width: 800px;height: 400px;">
-                              <vueCropper
-                                ref="cropper"
-                                style="background-repeat:repeat"
-                                :output-size="option.outputSize"
-                                :output-type="option.outputType"
-                                :info="option.info"
-                                :can-scale="option.canScale"
-                                :can-move-box="option.canMoveBox"
-                                :center-box="option.centerBox"
-                                :auto-crop="option.autoCrop"
-                                :fixed="option.fixed"
-                                :fixed-number="option.fixedNumber"
-                                :img="option.img"
-                              ></vueCropper>
-                            </div>
-                          </client-only>
+                          <div style="width: 800px;height: 400px;">
+                            <vueCropper
+                              ref="cropper"
+                              style="background-repeat:repeat"
+                              :output-size="option.outputSize"
+                              :output-type="option.outputType"
+                              :info="option.info"
+                              :can-scale="option.canScale"
+                              :can-move-box="option.canMoveBox"
+                              :center-box="option.centerBox"
+                              :auto-crop="option.autoCrop"
+                              :fixed="option.fixed"
+                              :fixed-number="option.fixedNumber"
+                              :img="option.img"
+                            ></vueCropper>
+                          </div>
                         </v-card-title>
                         <v-card-actions>
                           <v-spacer></v-spacer>
@@ -136,7 +134,6 @@
                 <v-flex xs12 text-center>
                   <v-btn
                     rounded
-                    class="font-weight-light"
                     color="primary"
                     :loading="loading"
                     @click="submit()"
@@ -156,18 +153,16 @@
           text="支持使用markdown语法"
         >
           <div id="editor" class="mavonEditor">
-            <client-only>
-              <mavon-editor
-                ref="md"
-                v-model="form.contentMd"
-                style="min-height: 800px"
-                :ishljs="true"
-                code-style="atelier-plateau-dark"
-                @change="changeData"
-                @imgAdd="$imgAdd"
-                @imgDel="$imgDel"
-              />
-            </client-only>
+            <mavon-editor
+              ref="md"
+              v-model="form.contentMd"
+              style="min-height: 800px"
+              :ishljs="true"
+              code-style="atelier-plateau-dark"
+              @change="changeData"
+              @imgAdd="$imgAdd"
+              @imgDel="$imgDel"
+            />
           </div>
         </material-card>
       </v-flex>
@@ -230,40 +225,68 @@ export default {
       };
     }
   },
-  async asyncData({ app, query, error }) {
-    const resCategory = await app.$axios.$request(getCategoryList());
-    const category = [];
-    if (resCategory.code === "200") {
-      const de = {};
-      de.text = "请选择分类目录";
-      de.value = "";
-      category.push(de);
-      for (let i = 0; i < resCategory.data.length; i++) {
-        const re = {};
-        re.text = resCategory.data[i].name;
-        re.value = resCategory.data[i].id;
-        category.push(re);
-      }
-    } else {
-      return error({
-        statusCode: resCategory.code,
-        message: resCategory.message
+  created() {
+    getCategoryList()
+      .then(res => {
+        if (res.code === "200") {
+          let categorys = [];
+          const de = {};
+          de.text = "请选择分类目录";
+          de.value = "";
+          categorys.push(de);
+          for (let i = 0; i < res.data.length; i++) {
+            const re = {};
+            re.text = res.data[i].name;
+            re.value = res.data[i].id;
+            categorys.push(re);
+          }
+          this.category = categorys;
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(() => {
+        this.$swal({
+          text: "拉取文章分类失败",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
       });
-    }
-    const resArticleLabel = await app.$axios.$request(getArticleLabelList());
-    let labels = [];
-    if (resArticleLabel.code === "200") {
-      labels = resArticleLabel.data.map(r => r.name);
-    } else {
-      return error({
-        statusCode: resArticleLabel.code,
-        message: resArticleLabel.message
+    getArticleLabelList()
+      .then(res => {
+        if (res.code === "200") {
+          this.labels = res.data.map(r => r.name);
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(() => {
+        this.$swal({
+          text: "拉取文章标签失败",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
       });
-    }
-    return {
-      category: category,
-      labels: labels
-    };
   },
   methods: {
     submit() {
@@ -300,8 +323,7 @@ export default {
         for (const _img in this.img_file) {
           formdata.append("files", this.img_file[_img], _img);
         }
-        this.$axios
-          .$request(uploadImageMultiple(formdata))
+        uploadImageMultiple(formdata)
           .then(res => {
             if (res.code === "200") {
               for (const img in res.data) {
@@ -309,8 +331,7 @@ export default {
                 this.$refs.md.$img2Url(res.data[img].pos, res.data[img].url);
               }
               // 开始提交文章信息
-              this.$axios
-                .$request(saveArticle(this.form))
+              saveArticle(this.form)
                 .then(res => {
                   if (res.code === "200") {
                     this.loading = false;
@@ -356,14 +377,7 @@ export default {
           })
           .catch(e => {
             this.loading = false;
-            // this.$swal({
-            //     text: e.message,
-            //     type: 'error',
-            //     toast: true,
-            //     position: 'top',
-            //     showConfirmButton: false,
-            //     timer: 3000
-            // });
+            console.log(e);
           });
       } else {
         // 开始提交文章信息
@@ -442,8 +456,7 @@ export default {
         const file = data;
         const param = new FormData();
         param.append("file", file);
-        this.$axios
-          .$request(uploadArticle(param))
+        uploadArticle(param)
           .then(res => {
             if (res.code === "200") {
               this.form.coverImage = res.data;

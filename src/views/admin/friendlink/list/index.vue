@@ -8,22 +8,6 @@
             <v-icon small>refresh</v-icon>
           </v-btn>
         </v-flex>
-        <v-flex xs6 sm3 md1>
-          <v-btn color="success" title="添加" @click="handleAdd()">
-            添加 <br />
-            <v-icon small>add_circle</v-icon>
-          </v-btn>
-        </v-flex>
-        <v-flex xs6 sm3 md1>
-          <v-btn
-            color="error"
-            title="删除"
-            @click="handleDeleteSelected(selected)"
-          >
-            删除 <br />
-            <v-icon small>remove_circle</v-icon>
-          </v-btn>
-        </v-flex>
       </v-layout>
     </v-container>
     <v-data-table
@@ -41,6 +25,18 @@
         <p class="text-md-center teal--text">
           已经找遍了，再怎么找也找不到啦！
         </p>
+      </template>
+      <template v-slot:item.avatar="{ item }">
+        <v-avatar size="32px" color="grey lighten-4">
+          <v-img
+            :lazy-src="item.avatar"
+            :src="item.avatar"
+            alt="avatar"
+          ></v-img>
+        </v-avatar>
+      </template>
+      <template v-slot:item.color="{ item }">
+        <div><v-avatar :class="item.color" size="23" /> {{ item.color }}</div>
       </template>
       <template v-slot:item.command="{ item }">
         <v-layout justify-center class="mb-2">
@@ -75,12 +71,6 @@
       ></v-pagination>
     </div>
     <div>
-      <add-form
-        :alert="addFormVisible"
-        @handleCancel="handleCancelAdd"
-      ></add-form>
-    </div>
-    <div>
       <edit-form
         :row="row"
         :alert="editFormVisible"
@@ -90,23 +80,24 @@
   </div>
 </template>
 <script>
-import addForm from "./components/addForm";
-import editForm from "./components/editForm";
-import { getRolePageList, deleteRole, deleteRoleBatch } from "@/api/role";
+import editForm from "./components/form";
+import { getFriendLinkList, deleteFriendLinkById } from "@/api/friendlink";
 
 export default {
-  name: "Role",
+  name: "FriendLink",
   layout: "admin",
-  components: { addForm, editForm },
+  components: { editForm },
   data() {
     return {
       searchData: {},
       selected: [],
       loading: true,
       headers: [
-        { text: "名称", value: "name" },
-        { text: "VALUE", value: "value" },
-        { text: "功能描述", value: "description" },
+        { text: "头像", value: "avatar" },
+        { text: "名称", value: "friendName" },
+        { text: "链接", value: "link", align: "center" },
+        { text: "介绍", value: "friendInfo", align: "center" },
+        { text: "风格", value: "color" },
         { text: "操作", value: "command", align: "center" }
       ],
       desserts: [],
@@ -142,7 +133,7 @@ export default {
       const searchData = this.searchData;
       searchData.pageSize = this.pagination.rowsPerPage;
       searchData.pageNumber = this.pagination.page;
-      getRolePageList(searchData)
+      getFriendLinkList(searchData)
         .then(res => {
           if (res.code === "200") {
             this.desserts = res.data.records;
@@ -175,7 +166,7 @@ export default {
         });
     },
     refresh(obj) {
-      this.$axios.$request(getRolePageList(obj)).then(res => {
+      getFriendLinkList(obj).then(res => {
         this.desserts = res.data.records;
         this.pagination.page = res.data.currentPage;
         this.pagination.rowsPerPage = res.data.pageSize;
@@ -194,14 +185,8 @@ export default {
         this.pagination.descending = false;
       }
     },
-    handleCancelAdd() {
-      this.addFormVisible = false;
-    },
     handleCancelEdit() {
       this.editFormVisible = false;
-    },
-    handleAdd() {
-      this.addFormVisible = true;
     },
     handleEdit(row) {
       this.editFormVisible = true;
@@ -210,19 +195,18 @@ export default {
     handleDelete(row) {
       this.$swal({
         title: "确定要删除吗？",
-        text: "一旦删除，该角色下的用户都无法使用",
+        text: "友尽了嘛？",
         type: "warning",
         showCancelButton: true
       }).then(result => {
         if (result.value) {
-          this.$axios
-            .$request(deleteRole(row.id))
+          deleteFriendLinkById(row.id)
             .then(res => {
               this.loading = false;
               if (res.code === "200" && res.data) {
                 this.$swal({
                   title: "删除成功",
-                  text: "该角色已经安全删除",
+                  text: "该友链已经删除",
                   type: "success"
                 });
                 this.refresh();
@@ -247,42 +231,6 @@ export default {
             });
         }
       });
-    },
-    handleDeleteSelected(selected) {
-      const param = selected.map(s => s.id);
-      if (param.length > 0) {
-        this.$swal({
-          title: "确定要删除吗？",
-          text: "一旦删除，所选角色下的用户都无法使用",
-          type: "warning",
-          showCancelButton: true
-        }).then(result => {
-          if (result.value) {
-            this.$axios.$request(deleteRoleBatch(param)).then(res => {
-              if (res.code === "200" && res.data) {
-                this.$swal({
-                  title: "删除成功",
-                  text: "所选用户已经被封禁",
-                  type: "success"
-                });
-                this.refresh();
-              } else {
-                this.$swal({
-                  title: "删除失败",
-                  text: res.message,
-                  type: "error"
-                });
-              }
-            });
-          }
-        });
-      } else {
-        this.$swal({
-          title: "无法删除！",
-          text: "请至少选择一条需要删除的角色！",
-          type: "warning"
-        });
-      }
     }
   }
 };

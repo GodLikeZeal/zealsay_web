@@ -5,7 +5,7 @@
         <router-view />
       </v-fade-transition>
     </div>
-    <core-footer v-if="$route.name !== 'Maps'" />
+    <core-footer v-if="$route.name !== 'Maps'"></core-footer>
   </v-content>
 </template>
 
@@ -19,8 +19,4 @@ export default {
 };
 </script>
 
-<style scoped>
-#core-view {
-  padding-bottom: 100px;
-}
-</style>
+<style scoped></style>

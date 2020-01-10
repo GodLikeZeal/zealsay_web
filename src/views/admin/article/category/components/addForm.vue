@@ -35,7 +35,6 @@
                   v-model="form.description"
                   persistent-hint
                   label="描述"
-                  outline
                 ></v-text-field>
               </v-flex>
             </v-layout>
@@ -44,9 +43,9 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn outline color="darken-1" @click="handleCancel">取消</v-btn>
+        <v-btn outlined color="darken-1" @click="handleCancel">取消</v-btn>
         <v-btn
-          outline
+          outlined
           :loading="loading"
           color="primary darken-1"
           @click="handleSubmit"
@@ -114,8 +113,7 @@ export default {
       // 开始提交
       if (this.$refs.form.validate()) {
         this.form.parentId = this.parentId;
-        this.$axios
-          .$request(addCategory(this.form))
+        addCategory(this.form)
           .then(res => {
             this.loading = false;
             if (res.code === "200" && res.data) {

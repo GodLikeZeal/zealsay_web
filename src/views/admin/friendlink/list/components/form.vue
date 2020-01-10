@@ -63,67 +63,33 @@
         <v-form ref="form" lazy-validation>
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12 sm6 md6>
                 <v-text-field
-                  v-model="form.username"
-                  hint="用户名不能包含空格和特殊字符"
-                  label="用户名*"
+                  v-model="form.friendName"
+                  hint="友链名不能包含空格和特殊字符"
+                  label="友链名*"
                   validate-on-blur
                   :rules="usernameRules"
                   required
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12 sm6 md4>
+              <v-flex xs12 sm6 md6>
                 <v-text-field
-                  v-model="form.name"
-                  label="姓名"
-                  hint="输入真实姓名"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field
-                  v-model="form.age"
-                  label="年龄"
+                  v-model="form.color"
+                  label="印象颜色*"
                   persistent-hint
                 ></v-text-field>
               </v-flex>
-              <v-flex xs12>
+              <v-flex xs12 sm12 md12>
                 <v-text-field
-                  v-model="form.email"
-                  label="Email*"
-                  :rules="emailRules"
-                  type="email"
-                  required
+                  v-model="form.link"
+                  :rules="linkRules"
+                  label="链接*"
+                  hint="链接地址必须以http或者https开头，只能是合法的域名"
                 ></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field
-                  v-model="form.phoneNumber"
-                  label="手机号*"
-                  :rules="phoneRules"
-                  type="phone"
-                  required
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select
-                  v-model="form.sex"
-                  :items="sexs"
-                  item-text="text"
-                  item-value="value"
-                  item-avatar="avatar"
-                  label="性别"
-                ></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select
-                  v-model="form.role"
-                  :items="roles"
-                  item-text="text"
-                  item-value="value"
-                  label="角色"
-                  required
-                ></v-select>
+                <v-textarea v-model="form.friendInfo" label="简介"></v-textarea>
               </v-flex>
             </v-layout>
           </v-container>
@@ -145,13 +111,9 @@
 </template>
 
 <script>
-import { editUser, uploadAvatar } from "@/api/user";
-import {
-  validateUsername,
-  validatePhone,
-  validateEmail
-} from "@/util/validate";
-import { getRoleList } from "@/api/role";
+import { uploadImage } from "@/api/user";
+import { validateUsername, validateUrl } from "@/util/validate";
+import { updateFriendLinkById } from "@/api/friendlink";
 
 export default {
   name: "Edit",
@@ -174,18 +136,6 @@ export default {
     loading: false,
     file: "",
     showCropper: false,
-    sexs: [
-      {
-        value: 1,
-        text: "男",
-        avatar: '<img width="15px" src="@/static/image/sex/boy.png"/>'
-      },
-      {
-        value: 0,
-        text: "女",
-        avatar: '<img width="15px" src="@/static/image/sex/girl.png"/>'
-      }
-    ],
     valid: false,
     clickable: true,
     avatar: {
@@ -196,24 +146,20 @@ export default {
       v => !!v || "用户名不能为空!",
       v => validateUsername(v) || "必须是中文、英文、数字包括下划线"
     ],
-    phoneRules: [
-      v => !!v || "手机号不能为空!",
-      v => validatePhone(v) || "不是合法的手机号"
-    ],
-    emailRules: [v => !v || validateEmail(v) || "不是合法的邮箱"]
+    linkRules: [
+      v => !!v || "链接不能为空!",
+      v => validateUrl(v) || "必须是合法的链接"
+    ]
   }),
   computed: {
     form: function() {
       return {
         id: this.row.id,
-        age: this.row.age,
         avatar: this.row.avatar,
-        email: this.row.email,
-        name: this.row.name,
-        phoneNumber: this.row.phoneNumber,
-        role: this.row.role,
-        sex: this.row.sex,
-        username: this.row.username
+        friendName: this.row.friendName,
+        friendInfo: this.row.friendInfo,
+        link: this.row.link,
+        color: this.row.color
       };
     },
     option: function() {
@@ -236,29 +182,7 @@ export default {
       return this.alert;
     }
   },
-  created() {
-    if (!this.roles.length) {
-      getRoleList().then(res => {
-        if (res.code === "200") {
-          this.roles = res.data.map(r => {
-            return {
-              value: r.value,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: "拉取角色信息失败",
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      });
-    }
-  },
+  created() {},
   methods: {
     handleCancel() {
       this.$emit("handleCancel");
@@ -269,7 +193,7 @@ export default {
     },
     save() {
       // 开始提交
-      editUser(this.form)
+      updateFriendLinkById(this.form)
         .then(res => {
           if (res.code === "200" && res.data) {
             this.$swal({
@@ -348,7 +272,8 @@ export default {
         const file = data;
         const param = new FormData();
         param.append("file", file);
-        uploadAvatar(param)
+        this.$axios
+          .$request(uploadImage(param))
           .then(res => {
             if (res.code === "200") {
               this.row.avatar = res.data;

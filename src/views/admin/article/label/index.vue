@@ -91,25 +91,40 @@ export default {
     labels: [],
     addFormVisible: false
   }),
-  async asyncData({ app, query, error }) {
-    const resArticleLabel = await app.$axios.$request(getArticleLabelPage());
-    if (resArticleLabel.code === "200") {
-      const labels = resArticleLabel.data.records;
-      const total = resArticleLabel.data.total;
-      return { labels: labels, total: total };
-    } else {
-      return error({
-        statusCode: resArticleLabel.code,
-        message: resArticleLabel.message
+
+  created() {
+    getArticleLabelPage()
+      .then(res => {
+        if (res.code === "200") {
+          this.labels = res.data.records;
+          this.total = res.data.total;
+        } else {
+          this.$swal({
+            text: res.message,
+            type: "error",
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 3000
+          });
+        }
+      })
+      .catch(() => {
+        this.$swal({
+          text: "拉取文章标签失败",
+          type: "error",
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 3000
+        });
       });
-    }
   },
   methods: {
     search() {
       const serachData = {};
       serachData.name = this.search_text;
-      this.$axios
-        .$request(getArticleLabelPage(serachData))
+      getArticleLabelPage(serachData)
         .then(res => {
           if (res.code === "200") {
             this.labels = res.data.records;
@@ -144,8 +159,7 @@ export default {
       this.addFormVisible = false;
     },
     remove(id) {
-      this.$axios
-        .$request(deleteArticleLabel(id))
+      deleteArticleLabel(id)
         .then(res => {
           if (res.code === "200") {
             this.search();

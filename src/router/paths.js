@@ -62,16 +62,20 @@ export default [
   },
   {
     path: "/",
-    meta: {},
-    name: "Root",
-    redirect: {
-      name: "Dashboard"
-    }
+    meta: { public: true },
+    name: "home",
+    title: "主页",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/index.vue`
+      )
   },
   {
     path: "/admin/dashboard",
     meta: { breadcrumb: true, roles: ["ADMIN"] },
-    name: "Dashboard",
+    name: "dashboard",
     title: "桌面",
     component: () =>
       import(
@@ -174,6 +178,30 @@ export default [
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
         `@/views/admin/article/label/index.vue`
+      )
+  },
+  {
+    path: "/admin/friendlink/list",
+    meta: { breadcrumb: true, roles: ["ADMIN"] },
+    name: "friendlinklist",
+    title: "友链列表",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/admin/friendlink/list/index.vue`
+      )
+  },
+  {
+    path: "/admin/friendlink/add",
+    meta: { breadcrumb: true, roles: ["ADMIN"] },
+    name: "friendlinkadd",
+    title: "友链添加",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/admin/friendlink/add/index.vue`
       )
   }
 ];

@@ -43,25 +43,23 @@
                 </v-card-title>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="darken-1" outline @click="cropCancel"
+                  <v-btn color="darken-1" outlined @click="cropCancel"
                     >返回</v-btn
                   >
-                  <v-btn color="primary" outline @click="cropSubmit"
+                  <v-btn color="primary" outlined @click="cropSubmit"
                     >裁剪</v-btn
                   >
                 </v-card-actions>
               </v-card>
             </v-dialog>
             <h6 class="category avator text-gray ffont-weight-light mb-3">
-              点击上传用户头像
+              点击上传友链头像
             </h6>
             <h5 class="card-title font-weight-light">
-              Some of us get dipped in flat, some in satin, some in gloss....
-              But every once in a while you find someone who's iridescent, and
-              when you do, nothing will ever compare.
+              Isn't it a pleasure that a friend comes from a faraway place?
             </h5>
             <p class="card-description font-weight-light">
-              有人住高楼，有人在深沟，有人光万丈，有人一身锈，世人万千种，浮云莫去求，斯人若彩虹，遇上方知有。
+              有朋自远方来,不亦说乎？
             </p>
           </v-card-text>
         </material-card>
@@ -69,109 +67,42 @@
       <v-flex xs12 md10>
         <material-card
           color="primary"
-          title="用户详细信息"
-          text="完善用户信息后，点击提交"
+          title="友链详细信息"
+          text="完善友链信息后，点击提交"
         >
           <v-form ref="form" lazy-validation>
             <v-container py-0>
               <v-layout wrap>
                 <v-flex xs12 md4>
                   <v-text-field
-                    v-model="form.username"
+                    v-model="form.friendName"
                     :rules="usernameRules"
-                    hint="用户名不能包含空格和特殊字符"
+                    hint="友链名不能包含空格和特殊字符"
                     class="purple-input"
-                    label="用户名*"
+                    label="友链名*"
                     required
                   />
                 </v-flex>
                 <v-flex xs12 md4>
                   <v-text-field
-                    v-model="form.password"
-                    :rules="passwordRules"
-                    hint="密码必须以字母开头，长度在6~18之间，只能包含字母、数字和下划线"
+                    v-model="form.link"
+                    :rules="linkRules"
+                    hint="链接地址必须以http或者https开头，只能是合法的域名"
                     class="purple-input"
-                    label="初始密码*"
+                    label="链接*"
                     required
                   />
                 </v-flex>
                 <v-flex xs12 md4>
                   <v-text-field
-                    v-model="form.name"
-                    label="真实姓名"
-                    class="purple-input"
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-select
-                    v-model="form.role"
-                    :items="roles"
-                    item-text="text"
-                    item-value="value"
-                    label="角色*"
-                    required
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-text-field
-                    v-model="form.phoneNumber"
-                    :rules="phoneRules"
-                    label="手机号*"
-                    class="purple-input"
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-text-field
-                    v-model="form.email"
-                    :rules="emailRules"
-                    label="Email"
-                    class="purple-input"
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-select
-                    v-model="form.province"
-                    :items="province"
-                    item-text="text"
-                    item-value="value"
-                    item-avatar="avatar"
-                    label="省"
-                    :loading="provinceLoading"
-                    @change="changeProvince"
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-select
-                    v-model="form.city"
-                    :items="city"
-                    item-text="text"
-                    item-value="value"
-                    item-avatar="avatar"
-                    label="市"
-                    :loading="cityLoading"
-                    @change="changeCity"
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-select
-                    v-model="form.area"
-                    :items="area"
-                    item-text="text"
-                    item-value="value"
-                    item-avatar="avatar"
-                    label="区"
-                    :loading="areaLoading"
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md12>
-                  <v-text-field
-                    v-model="form.adrress"
-                    label="详细住址"
+                    v-model="form.color"
+                    label="印象颜色*"
                     class="purple-input"
                   />
                 </v-flex>
                 <v-flex xs12>
                   <v-textarea
+                    v-model="form.friendInfo"
                     class="purple-input"
                     label="简介"
                     value="一个喜欢安静的程序员."
@@ -180,7 +111,6 @@
                 <v-flex xs12 text-center>
                   <v-btn
                     rounded
-                    class="mx-0"
                     color="primary"
                     :loading="loading"
                     @click="submit()"
@@ -197,33 +127,21 @@
   </v-container>
 </template>
 <script>
-import { addUser, uploadAvatar } from "@/api/user";
-import { getProvinceList, getCityList, getAreaList } from "@/api/dict";
-import { getRoleList } from "@/api/role";
-import {
-  validateUsername,
-  validatePassword,
-  validatePhone,
-  validateEmail
-} from "@/util/validate";
+import { saveFriendLink } from "@/api/friendlink";
+import { uploadImage } from "@/api/user";
+import { validateUsername, validateUrl } from "@/util/validate";
 
 export default {
   name: "Add",
   layout: "admin",
   data: () => ({
     form: {
-      username: "",
-      password: "",
-      name: "",
-      avatar: "https://pan.zealsay.com/20190630225012780000000.jpg",
-      phoneNumber: "",
-      email: "",
-      province: "",
-      city: "",
-      area: "",
-      adrress: "",
-      introduction: "",
-      role: ""
+      id: "",
+      avatar: "https://pan.zealsay.com/20190630223915548000000.jpg",
+      friendName: "",
+      friendInfo: "",
+      link: "",
+      color: ""
     },
     showCropper: false,
     valid: false,
@@ -244,17 +162,10 @@ export default {
       v => !!v || "用户名不能为空!",
       v => validateUsername(v) || "必须是中文、英文、数字包括下划线"
     ],
-    passwordRules: [
-      v => !!v || "密码不能为空!",
-      v =>
-        validatePassword(v) ||
-        "必须以字母开头，长度在6~18之间，只能包含字母、数字和下划线"
-    ],
-    phoneRules: [
-      v => !!v || "手机号不能为空!",
-      v => validatePhone(v) || "不是合法的手机号"
-    ],
-    emailRules: [v => !v || validateEmail(v) || "不是合法的邮箱"]
+    linkRules: [
+      v => !!v || "链接不能为空!",
+      v => validateUrl(v) || "必须是合法的链接"
+    ]
   }),
   computed: {
     option: function() {
@@ -274,121 +185,7 @@ export default {
       };
     }
   },
-  created() {
-    getProvinceList()
-      .then(res => {
-        if (res.code === "200") {
-          this.province = res.data.map(r => {
-            return {
-              value: r.code,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(e => {
-        console.log(e);
-        this.$swal({
-          text: "拉取省份信息失败!",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
-      });
-    getRoleList()
-      .then(res => {
-        if (res.code === "200") {
-          this.roles = res.data.map(r => {
-            return {
-              value: r.value,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(e => {
-        console.log(e);
-        this.$swal({
-          text: "拉取角色信息失败!",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
-      });
-  },
   methods: {
-    changeProvince() {
-      this.cityLoading = true;
-      const obj = {};
-      obj.code = this.form.province;
-      this.$axios.$request(getCityList(obj)).then(res => {
-        if (res.code === "200") {
-          this.city = res.data.map(r => {
-            return {
-              value: r.code,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: "拉取省市区信息失败!",
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-        this.cityLoading = false;
-      });
-    },
-    changeCity() {
-      this.areaLoading = true;
-      const obj = {};
-      obj.code = this.form.city;
-      this.$axios.$request(getAreaList(obj)).then(res => {
-        if (res.code === "200") {
-          this.area = res.data.map(r => {
-            return {
-              value: r.code,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: "拉取省市区信息失败!",
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-        this.areaLoading = false;
-      });
-    },
     submit() {
       this.loading = true;
       if (this.$refs.form.validate()) {
@@ -400,8 +197,7 @@ export default {
     },
     save() {
       // 开始提交
-      this.$axios
-        .$request(addUser(this.form))
+      saveFriendLink(this.form)
         .then(res => {
           this.loading = false;
           if (res.code === "200" && res.data) {
@@ -473,8 +269,7 @@ export default {
         const file = data;
         const param = new FormData();
         param.append("file", file);
-        this.$axios
-          .$request(uploadAvatar(param))
+        uploadImage(param)
           .then(res => {
             if (res.code === "200") {
               this.form.avatar = res.data;

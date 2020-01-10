@@ -1,8 +1,8 @@
 .v-btn {
   margin: $margin-small 1px;
-  padding: $padding-small + 2 $padding-general + 15;
+  //padding: $padding-small + 2 $padding-general + 15;
   font-size: $font-size-small;
-  font-weight: $font-weight-base !important;
+  //font-weight: $font-weight-base !important;
   height: auto;
   line-height: $line-height-base;
   color: $white ;
@@ -101,4 +101,9 @@
 .v-btn:focus:before,
 .v-btn:hover:before {
   background-color: transparent;
+}
+.btn-alert {
+  padding: $padding-small + 2 $padding-general + 15;
+  font-weight: $font-weight-base !important;
+  margin: 0 0.5rem;
 }

@@ -106,7 +106,7 @@ export function getArticlePageList(obj) {
   return request({
     url: "/api/v1/article/page",
     method: "get",
-    params: obj
+    data: obj
   });
 }
 
