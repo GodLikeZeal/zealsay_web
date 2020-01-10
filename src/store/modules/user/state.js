@@ -1,7 +1,8 @@
 import { getToken } from "@/util/auth";
 
 export default {
-  user: "",
+  id: "",
+  username: "",
   status: "",
   code: "",
   token: getToken(),

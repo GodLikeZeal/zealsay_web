@@ -1,30 +1,29 @@
 <template>
   <transition>
     <keep-alive>
-      <div id="appRoot">
-        <v-app>
-          <template v-if="$route.meta.public">
-            <router-view></router-view>
-          </template>
-          <template v-else>
-            <!--<core-filter/>-->
-
-            <core-toolbar />
-
-            <core-drawer />
-
-            <core-view />
-          </template>
+      <template v-if="$route.meta.public">
+        <v-app class="no-background">
+          <router-view></router-view>
         </v-app>
-      </div>
+      </template>
+      <template v-else>
+        <v-app>
+          <!--<core-filter/>-->
+
+          <core-toolbar />
+
+          <core-drawer />
+
+          <core-view />
+        </v-app>
+      </template>
     </keep-alive>
   </transition>
 </template>
 
 <script></script>
 <style scoped lang="scss">
-/* Remove in 1.2 */
-.v-datatable thead th.column.sortable i {
-  vertical-align: unset;
+.no-background {
+  background-color: inherit !important;
 }
 </style>

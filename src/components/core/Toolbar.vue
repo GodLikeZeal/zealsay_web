@@ -1,5 +1,5 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-toolbar id="core-toolbar" flat prominent>
+  <v-toolbar id="core-toolbar" class="no-background" flat prominent>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-flex align-center layout py-2>
@@ -178,8 +178,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #core-toolbar a {
   text-decoration: none;
+}
+.no-background {
+  background-color: inherit !important;
 }
 </style>

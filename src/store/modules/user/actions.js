@@ -5,9 +5,9 @@ import { setToken, removeToken } from "@/util/auth";
 export default {
   // 用户名登录
   LoginByUsername({ commit }, userInfo) {
-    const username = userInfo.username.trim();
+    userInfo.username = userInfo.username.trim();
     return new Promise((resolve, reject) => {
-      loginByUsername(username, userInfo.password)
+      loginByUsername(userInfo)
         .then(response => {
           const code = response.code;
           const data = response.data;

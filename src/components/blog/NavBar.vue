@@ -116,7 +116,7 @@ export default {
       return this.category;
     },
     loggedIn: function() {
-      return this.$store.state.loggedIn;
+      return this.$store.state.user.token;
     },
     avatar: function() {
       return this.$store.state.user.avatar;
@@ -135,7 +135,7 @@ export default {
           all: true,
           icon: "mdi-account",
           href: this.$store.state.user
-            ? "/user/" + this.$store.state.auth.id
+            ? "/user/" + this.$store.state.user.id
             : "",
           title: "我的主页",
           click: () => {}

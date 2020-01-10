@@ -18,7 +18,7 @@ export default [
       import(
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
-        `@/views/NotFound.vue`
+        `@/views/404.vue`
       )
   },
   {
@@ -44,7 +44,7 @@ export default [
       import(
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
-        `@/views/Error.vue`
+        `@/views/500.vue`
       )
   },
   {
@@ -202,6 +202,66 @@ export default [
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
         `@/views/admin/friendlink/add/index.vue`
+      )
+  },
+  {
+    path: "/blog/about",
+    meta: { public: true },
+    name: "about",
+    title: "关于",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/blog/about/index.vue`
+      )
+  },
+  {
+    path: "/blog/category/:id",
+    meta: { public: true },
+    name: "blogcategory",
+    title: "分类博客",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/blog/category/index.vue`
+      )
+  },
+  {
+    path: "/blog/friend",
+    meta: { public: true },
+    name: "blogfriend",
+    title: "友链",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/blog/friend/index.vue`
+      )
+  },
+  {
+    path: "/blog/label/:name",
+    meta: { public: true },
+    name: "bloglabel",
+    title: "标签博客",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/blog/label/index.vue`
+      )
+  },
+  {
+    path: "/blog/:id",
+    meta: { public: true },
+    name: "blog",
+    title: "文章详情",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/blog/index.vue`
       )
   }
 ];
