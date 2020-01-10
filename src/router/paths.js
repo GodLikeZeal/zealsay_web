@@ -57,7 +57,7 @@ export default [
       import(
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
-        `@/views/Login.vue`
+        `@/views/login.vue`
       )
   },
   {
