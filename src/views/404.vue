@@ -3,9 +3,9 @@
     <v-col class="d-flex align-center justify-center">
       <img src="../assets/gif/NotFound.gif" alt="NotFound" />
       <div class="text-center">
-        <h1>500</h1>
+        <h1>404</h1>
         <h2 class="my-3 headline ">
-          抱歉, 服务器开小差了,稍后再试试哦!
+          抱歉, 再怎么找也找不到啦!
         </h2>
         <div>
           <v-btn color="primary" @click="goHome">

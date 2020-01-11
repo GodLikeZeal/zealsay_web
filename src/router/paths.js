@@ -61,6 +61,19 @@ export default [
       )
   },
   {
+    path: "/test",
+    meta: {
+      public: true
+    },
+    name: "test",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/test.vue`
+      )
+  },
+  {
     path: "/",
     meta: { public: true },
     name: "home",
