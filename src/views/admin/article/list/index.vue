@@ -356,8 +356,8 @@ export default {
         .then(res => {
           if (res.code === "200") {
             this.desserts = res.data.records;
-            // this.pagination.page = res.data.currentPage;
-            // this.pagination.rowsPerPage = res.data.pageSize;
+            this.pagination.page = res.data.currentPage;
+            this.pagination.rowsPerPage = res.data.pageSize;
             this.pagination.totalItems = res.data.total;
           } else {
             this.$swal({

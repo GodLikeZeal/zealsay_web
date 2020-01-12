@@ -3,7 +3,7 @@ import qs from "qs";
 
 export function loginByUsername(data) {
   return request({
-    url: "/api/v1/authentication/login",
+    url: "/app/api/v1/authentication/login",
     method: "post",
     data: qs.stringify(data)
   });
@@ -11,14 +11,14 @@ export function loginByUsername(data) {
 
 export function logout() {
   return request({
-    url: "/api/v1/authentication/logout",
+    url: "/app/api/v1/authentication/logout",
     method: "post"
   });
 }
 
 export function getUserInfo() {
   return request({
-    url: "/api/v1/authentication/user",
+    url: "/app/api/v1/authentication/user",
     method: "get"
   });
 }

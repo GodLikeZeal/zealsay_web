@@ -52,12 +52,38 @@ export default [
     meta: {
       public: true
     },
-    name: "Login",
+    name: "login",
     component: () =>
       import(
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
         `@/views/login.vue`
+      )
+  },
+  {
+    path: "/register",
+    meta: {
+      public: true
+    },
+    name: "register",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/register.vue`
+      )
+  },
+  {
+    path: "/confirm",
+    meta: {
+      public: true
+    },
+    name: "confirm",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/confirm.vue`
       )
   },
   {
@@ -275,6 +301,18 @@ export default [
         /* webpackChunkName: "routes" */
         /* webpackMode: "lazy-once" */
         `@/views/blog/index.vue`
+      )
+  },
+  {
+    path: "/user/:id",
+    meta: { public: true },
+    name: "userinfo",
+    title: "个人中心",
+    component: () =>
+      import(
+        /* webpackChunkName: "routes" */
+        /* webpackMode: "lazy-once" */
+        `@/views/user/index.vue`
       )
   }
 ];

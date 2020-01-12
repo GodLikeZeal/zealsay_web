@@ -73,7 +73,13 @@ export default {
   data: () => ({
     loading: true,
     colors: ["primary", "success", "info", "warning", "danger"],
-    pagination: {},
+    pagination: {
+      descending: true,
+      page: 1,
+      rowsPerPage: 10, // -1 for All
+      sortBy: "",
+      totalItems: 2
+    },
     motto: {
       hitokoto: "",
       creator: "",

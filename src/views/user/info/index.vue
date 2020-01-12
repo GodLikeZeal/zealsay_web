@@ -2,80 +2,15 @@
   <v-container fill-height fluid grid-list-xl>
     <v-layout justify-center wrap>
       <v-flex xs12 md10>
-        <material-card class="v-card-profile">
-          <v-card-text class="text-center">
-            <v-dialog v-model="showCropper" persistent width="800px">
-              <template v-slot:activator="{ on }">
-                <label for="uploads">
-                  <a>
-                    <v-avatar size="96">
-                      <img :src="form.avatar" alt="avatar" />
-                    </v-avatar>
-                  </a>
-                </label>
-                <input
-                  id="uploads"
-                  ref="avator"
-                  type="file"
-                  style="display: none;"
-                  accept="image/png, image/jpeg, image/gif, image/jpg"
-                  @change="fileChange($event)"
-                />
-              </template>
-              <v-card>
-                <v-card-title>
-                  <div style="width: 800px;height: 400px;">
-                    <vueCropper
-                      ref="cropper"
-                      style="background-repeat:repeat"
-                      :output-size="option.outputSize"
-                      :output-type="option.outputType"
-                      :info="option.info"
-                      :can-scale="option.canScale"
-                      :can-move-box="option.canMoveBox"
-                      :center-box="option.centerBox"
-                      :auto-crop="option.autoCrop"
-                      :fixed="option.fixed"
-                      :fixed-number="option.fixedNumber"
-                      :img="option.img"
-                    ></vueCropper>
-                  </div>
-                </v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="darken-1" outline @click="cropCancel"
-                    >返回</v-btn
-                  >
-                  <v-btn color="primary" outline @click="cropSubmit"
-                    >裁剪</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <h6 class="category avator text-gray ffont-weight-light mb-3">
-              点击上传用户头像
-            </h6>
-            <h5 class="card-title font-weight-light">
-              Some of us get dipped in flat, some in satin, some in gloss....
-              But every once in a while you find someone who's iridescent, and
-              when you do, nothing will ever compare.
-            </h5>
-            <p class="card-description font-weight-light">
-              有人住高楼，有人在深沟，有人光万丈，有人一身锈，世人万千种，浮云莫去求，斯人若彩虹，遇上方知有。
-            </p>
-          </v-card-text>
-        </material-card>
-      </v-flex>
-      <v-flex xs12 md10>
         <material-card
           color="primary"
-          title="用户详细信息"
-          text="完善用户信息后，点击提交"
+          title="基本信息"
+          text="点击提交按钮，可保存"
         >
           <v-form ref="form" lazy-validation>
             <v-container py-0>
               <v-layout wrap>
-                <v-flex xs12 md4>
+                <v-flex xs12 md6>
                   <v-text-field
                     v-model="form.username"
                     :rules="usernameRules"
@@ -85,46 +20,10 @@
                     required
                   />
                 </v-flex>
-                <v-flex xs12 md4>
-                  <v-text-field
-                    v-model="form.password"
-                    :rules="passwordRules"
-                    hint="密码必须以字母开头，长度在6~18之间，只能包含字母、数字和下划线"
-                    class="purple-input"
-                    label="初始密码*"
-                    required
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
+                <v-flex xs12 md6>
                   <v-text-field
                     v-model="form.name"
                     label="真实姓名"
-                    class="purple-input"
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-select
-                    v-model="form.role"
-                    :items="roles"
-                    item-text="text"
-                    item-value="value"
-                    label="角色*"
-                    required
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-text-field
-                    v-model="form.phoneNumber"
-                    :rules="phoneRules"
-                    label="手机号*"
-                    class="purple-input"
-                  />
-                </v-flex>
-                <v-flex xs12 md4>
-                  <v-text-field
-                    v-model="form.email"
-                    :rules="emailRules"
-                    label="Email"
                     class="purple-input"
                   />
                 </v-flex>
@@ -163,29 +62,39 @@
                     :loading="areaLoading"
                   ></v-select>
                 </v-flex>
-                <v-flex xs12 md12>
+                <v-flex xs12 md6>
+                  <v-select
+                    v-model="form.role"
+                    :items="roles"
+                    item-text="text"
+                    item-value="value"
+                    label="角色"
+                    disabled
+                    required
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12 md6>
                   <v-text-field
-                    v-model="form.adrress"
+                    v-model="form.address"
                     label="详细住址"
                     class="purple-input"
                   />
                 </v-flex>
                 <v-flex xs12>
                   <v-textarea
+                    v-model="form.introduction"
                     class="purple-input"
                     label="简介"
-                    value="一个喜欢安静的程序员."
                   />
                 </v-flex>
                 <v-flex xs12 text-center>
                   <v-btn
                     rounded
-                    class="mx-0"
                     color="primary"
                     :loading="loading"
                     @click="submit()"
                   >
-                    添加保存
+                    保 存
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -197,9 +106,8 @@
   </v-container>
 </template>
 <script>
-import { addUser, uploadAvatar } from "@/api/user";
-import { getProvinceList, getCityList, getAreaList } from "@/api/dict";
-import { getRoleList } from "@/api/role";
+import { editUser, uploadAvatar } from "@/api/user";
+import { getCityList, getAreaList } from "@/api/dict";
 import {
   validateUsername,
   validatePassword,
@@ -208,31 +116,34 @@ import {
 } from "@/util/validate";
 
 export default {
-  name: "Add",
-  layout: "admin",
-  data: () => ({
+  name: "Info",
+  props: {
     form: {
-      username: "",
-      password: "",
-      name: "",
-      avatar: "https://pan.zealsay.com/20190630225012780000000.jpg",
-      phoneNumber: "",
-      email: "",
-      province: "",
-      city: "",
-      area: "",
-      adrress: "",
-      introduction: "",
-      role: ""
+      type: Object,
+      default: function() {
+        return {};
+      }
     },
+    province: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
+    roles: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
+  data: () => ({
     showCropper: false,
     valid: false,
     clickable: true,
     avatar: {
       size: 128
     },
-    roles: [],
-    province: [],
     city: [],
     area: [],
     provinceLoading: false,
@@ -273,69 +184,6 @@ export default {
         fixedNumber: [4, 4] // 截图框的宽高比例
       };
     }
-  },
-  created() {
-    getProvinceList()
-      .then(res => {
-        if (res.code === "200") {
-          this.province = res.data.map(r => {
-            return {
-              value: r.code,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(e => {
-        console.log(e);
-        this.$swal({
-          text: "拉取省份信息失败!",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
-      });
-    getRoleList()
-      .then(res => {
-        if (res.code === "200") {
-          this.roles = res.data.map(r => {
-            return {
-              value: r.value,
-              text: r.name
-            };
-          });
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(() => {
-        this.$swal({
-          text: "拉取角色信息失败!",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
-      });
   },
   methods: {
     changeProvince() {
@@ -400,25 +248,30 @@ export default {
     save() {
       // 开始提交
       this.$axios
-        .$request(addUser(this.form))
+        .$request(editUser(this.form))
         .then(res => {
-          this.loading = false;
           if (res.code === "200" && res.data) {
             this.$swal({
-              title: "添加成功!",
-              text: "您已经成功添加了一名用户",
-              type: "success"
+              text: "修改成功",
+              type: "success",
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 3000
             });
           } else {
+            this.loading = false;
             this.$swal({
-              title: "添加失败!",
               text: res.message,
-              type: "error"
+              type: "error",
+              toast: true,
+              position: "top",
+              showConfirmButton: false,
+              timer: 3000
             });
           }
         })
         .catch(e => {
-          this.loading = false;
           this.$swal({
             text: e.message,
             type: "error",

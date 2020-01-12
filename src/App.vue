@@ -24,6 +24,6 @@
 <script></script>
 <style scoped lang="scss">
 .no-background {
-  background-color: inherit !important;
+  background-color: #ffffff !important;
 }
 </style>

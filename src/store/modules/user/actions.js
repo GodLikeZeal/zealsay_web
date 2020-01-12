@@ -42,7 +42,9 @@ export default {
             reject("getInfo: roles must be a non-null array !");
           }
 
-          commit("SET_NAME", data.username);
+          commit("SET_ID", data.userId);
+          commit("SET_USERNAME", data.username);
+          commit("SET_STATUS", data.status);
           commit("SET_AVATAR", data.avatar);
           commit("SET_INTRODUCTION", data.introduction);
           resolve(response);

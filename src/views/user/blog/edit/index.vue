@@ -11,7 +11,7 @@
             <v-container py-0>
               <v-layout wrap>
                 <v-flex xs6 md6>
-                  <v-card-text class="text-xs-center">
+                  <v-card-text class="text-center">
                     <v-dialog v-model="showCropper" persistent width="800px">
                       <template v-slot:activator="{ on }">
                         <label for="uploads">
@@ -38,29 +38,31 @@
                       </template>
                       <v-card>
                         <v-card-title>
-                          <div style="width: 800px;height: 400px;">
-                            <vueCropper
-                              ref="cropper"
-                              style="background-repeat:repeat"
-                              :output-size="option.outputSize"
-                              :output-type="option.outputType"
-                              :info="option.info"
-                              :can-scale="option.canScale"
-                              :can-move-box="option.canMoveBox"
-                              :center-box="option.centerBox"
-                              :auto-crop="option.autoCrop"
-                              :fixed="option.fixed"
-                              :fixed-number="option.fixedNumber"
-                              :img="option.img"
-                            ></vueCropper>
-                          </div>
+                          <client-only>
+                            <div style="width: 800px;height: 400px;">
+                              <vueCropper
+                                ref="cropper"
+                                style="background-repeat:repeat"
+                                :output-size="option.outputSize"
+                                :output-type="option.outputType"
+                                :info="option.info"
+                                :can-scale="option.canScale"
+                                :can-move-box="option.canMoveBox"
+                                :center-box="option.centerBox"
+                                :auto-crop="option.autoCrop"
+                                :fixed="option.fixed"
+                                :fixed-number="option.fixedNumber"
+                                :img="option.img"
+                              ></vueCropper>
+                            </div>
+                          </client-only>
                         </v-card-title>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn color="darken-1" outlined @click="cropCancel"
+                          <v-btn color="darken-1" outline @click="cropCancel"
                             >返回</v-btn
                           >
-                          <v-btn color="primary" outlined @click="cropSubmit"
+                          <v-btn color="primary" outline @click="cropSubmit"
                             >裁剪</v-btn
                           >
                         </v-card-actions>
@@ -83,8 +85,8 @@
                     </v-flex>
                     <v-flex xs12 md12>
                       <v-radio-group v-model="form.status" row label="状 态">
-                        <v-radio label="草 稿" value="DRAFT"></v-radio>
-                        <v-radio label="发 布" value="FORMAL"></v-radio>
+                        <v-radio label="草稿" value="DRAFT"></v-radio>
+                        <v-radio label="发布" value="FORMAL"></v-radio>
                       </v-radio-group>
                     </v-flex>
                     <v-flex xs12 md12>
@@ -153,16 +155,18 @@
           text="支持使用markdown语法"
         >
           <div id="editor" class="mavonEditor">
-            <mavon-editor
-              ref="md"
-              v-model="form.contentMd"
-              style="min-height: 800px"
-              :ishljs="true"
-              code-style="atelier-plateau-dark"
-              @change="changeData"
-              @imgAdd="$imgAdd"
-              @imgDel="$imgDel"
-            />
+            <client-only>
+              <mavon-editor
+                ref="md"
+                v-model="form.contentMd"
+                style="z-index:0;height: 800px"
+                :ishljs="true"
+                code-style="atelier-plateau-dark"
+                @change="changeData"
+                @imgAdd="$imgAdd"
+                @imgDel="$imgDel"
+              />
+            </client-only>
           </div>
         </material-card>
       </v-flex>
@@ -173,27 +177,23 @@
 <script>
 import { uploadArticle, uploadImageMultiple } from "@/api/user";
 import {
+  getArticle,
   getCategoryList,
-  saveArticle,
+  updateArticle,
   getArticleLabelList
 } from "@/api/article";
 
 export default {
-  name: "Add",
-  layout: "admin",
+  name: "Edit",
   data: () => ({
-    form: {
-      title: "",
-      subheading: "",
-      status: "DRAFT",
-      coverImage: "https://pan.zealsay.com/20190701222747340000000.jpg",
-      label: [],
-      openness: "ALL",
-      contentMd: "",
-      contentHtml: ""
-    },
     showCropper: false,
     img_file: {},
+    valid: false,
+    clickable: true,
+    avatar: {
+      size: 192,
+      tile: true
+    },
     category: [],
     labels: [],
     categoryLoading: false,
@@ -212,7 +212,7 @@ export default {
       return {
         img:
           this.form.coverImage ||
-          "https://pan.zealsay.com/20190701222747340000000.jpg", // 裁剪图片的地址
+          "https://pan.zealsay.com/20190630225012780000000.jpg", // 裁剪图片的地址
         info: true, // 裁剪框的大小信息
         outputSize: 1, // 裁剪生成图片的质量
         outputType: "jpeg", // 裁剪生成图片的格式
@@ -225,78 +225,58 @@ export default {
       };
     }
   },
-  created() {
-    getCategoryList()
-      .then(res => {
-        if (res.code === "200") {
-          let categorys = [];
-          const de = {};
-          de.text = "请选择分类目录";
-          de.value = "";
-          categorys.push(de);
-          for (let i = 0; i < res.data.length; i++) {
-            const re = {};
-            re.text = res.data[i].name;
-            re.value = res.data[i].id;
-            categorys.push(re);
-          }
-          this.category = categorys;
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(() => {
-        this.$swal({
-          text: "拉取文章分类失败",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
+  async asyncData({ app, query, error }) {
+    const resArticle = await app.$axios.$request(getArticle(query.id));
+    let form = {};
+    if (resArticle.code === "200") {
+      form = resArticle.data;
+      form.label = form.label ? form.label.split(",") : [];
+    } else {
+      return error({
+        statusCode: resArticle.code,
+        message: resArticle.message
       });
-    getArticleLabelList()
-      .then(res => {
-        if (res.code === "200") {
-          this.labels = res.data.map(r => r.name);
-        } else {
-          this.$swal({
-            text: res.message,
-            type: "error",
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 3000
-          });
-        }
-      })
-      .catch(() => {
-        this.$swal({
-          text: "拉取文章标签失败",
-          type: "error",
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 3000
-        });
+    }
+    const resCategory = await app.$axios.$request(getCategoryList());
+    const category = [];
+    if (resCategory.code === "200") {
+      const de = {};
+      de.text = "请选择分类目录";
+      de.value = "";
+      category.push(de);
+      for (let i = 0; i < resCategory.data.length; i++) {
+        const re = {};
+        re.text = resCategory.data[i].name;
+        re.value = resCategory.data[i].id;
+        category.push(re);
+      }
+    } else {
+      return error({
+        statusCode: resCategory.code,
+        message: resCategory.message
       });
+    }
+    const resArticleLabel = await app.$axios.$request(getArticleLabelList());
+    let labels = [];
+    if (resArticleLabel.code === "200") {
+      labels = resArticleLabel.data.map(r => r.name);
+    } else {
+      return error({
+        statusCode: resArticleLabel.code,
+        message: resArticleLabel.message
+      });
+    }
+    return {
+      form: form,
+      category: category,
+      labels: labels
+    };
   },
   methods: {
     submit() {
       this.loading = true;
-      if (this.$refs.form.validate()) {
-        // 校验通过则提交保存
-        this.save();
-      } else {
-        this.loading = false;
-      }
+      this.save();
+      this.loading = false;
     },
     cropImage() {
       // get image data for post processing, e.g. upload or setting image src
@@ -323,7 +303,8 @@ export default {
         for (const _img in this.img_file) {
           formdata.append("files", this.img_file[_img], _img);
         }
-        uploadImageMultiple(formdata)
+        this.$axios
+          .$request(uploadImageMultiple(formdata))
           .then(res => {
             if (res.code === "200") {
               for (const img in res.data) {
@@ -331,7 +312,8 @@ export default {
                 this.$refs.md.$img2Url(res.data[img].pos, res.data[img].url);
               }
               // 开始提交文章信息
-              saveArticle(this.form)
+              this.$axios
+                .$request(updateArticle(this.form))
                 .then(res => {
                   if (res.code === "200") {
                     this.loading = false;
@@ -375,19 +357,27 @@ export default {
               });
             }
           })
-          .catch(() => {
+          .catch(e => {
             this.loading = false;
+            // this.$swal({
+            //     text: e.message,
+            //     type: 'error',
+            //     toast: true,
+            //     position: 'top',
+            //     showConfirmButton: false,
+            //     timer: 3000
+            // });
           });
       } else {
         // 开始提交文章信息
         this.$axios
-          .$request(saveArticle(this.form))
+          .$request(updateArticle(this.form))
           .then(res => {
             if (res.code === "200") {
               this.loading = false;
               this.$swal({
                 title: "保存成功!",
-                text: "不错哟,您已经添加了一篇文章啦",
+                text: "太棒啦,文章已经更新了哦",
                 type: "success"
               });
             } else {
@@ -455,7 +445,8 @@ export default {
         const file = data;
         const param = new FormData();
         param.append("file", file);
-        uploadArticle(param)
+        this.$axios
+          .$request(uploadArticle(param))
           .then(res => {
             if (res.code === "200") {
               this.form.coverImage = res.data;

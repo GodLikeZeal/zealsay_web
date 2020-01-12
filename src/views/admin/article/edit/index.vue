@@ -352,9 +352,8 @@ export default {
               });
             }
           })
-          .catch(e => {
+          .catch(() => {
             this.loading = false;
-            console.log(e);
           });
       } else {
         // 开始提交文章信息
