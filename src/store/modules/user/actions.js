@@ -35,15 +35,9 @@ export default {
             reject("error");
           }
           const data = response.data;
-          if (data.roles && data.roles.length > 0) {
-            // 验证返回的roles是否是一个非空数组
-            commit("SET_ROLES", data.roles);
-          } else {
-            reject("getInfo: roles must be a non-null array !");
-          }
-
           commit("SET_ID", data.userId);
           commit("SET_USERNAME", data.username);
+          commit("SET_ROLE", data.role);
           commit("SET_STATUS", data.status);
           commit("SET_AVATAR", data.avatar);
           commit("SET_INTRODUCTION", data.introduction);
@@ -75,7 +69,7 @@ export default {
       logout(state.token)
         .then(() => {
           commit("SET_TOKEN", "");
-          commit("SET_ROLES", []);
+          commit("SET_ROLE", "");
           removeToken();
           resolve();
         })
@@ -101,7 +95,7 @@ export default {
       setToken(role);
       getUserInfo(role).then(response => {
         const data = response.data;
-        commit("SET_ROLES", data.roles);
+        commit("SET_ROLE", data.role);
         commit("SET_NAME", data.name);
         commit("SET_AVATAR", data.avatar);
         commit("SET_INTRODUCTION", data.introduction);

@@ -10,5 +10,5 @@ export default {
   SET_USERNAME: set("username"),
   SET_NAME: set("name"),
   SET_AVATAR: set("avatar"),
-  SET_ROLES: set("roles")
+  SET_ROLE: set("role")
 };

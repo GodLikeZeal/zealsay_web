@@ -9,7 +9,7 @@ export default {
   name: "",
   avatar: "",
   introduction: "",
-  roles: [],
+  role: "",
   setting: {
     articlePlatform: []
   }

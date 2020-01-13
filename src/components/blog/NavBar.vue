@@ -122,11 +122,11 @@ export default {
       return this.$store.state.user.avatar;
     },
     role: function() {
-      return this.$store.state.user.roles;
+      return this.$store.state.user.role;
     },
     items: function() {
       return this.itemsMenu.filter(
-        s => s.all || this.$store.state.user.roles.indexOf("ADMIN") > -1
+        s => s.all || this.$store.state.user.role === "ADMIN"
       );
     },
     itemsMenu: function() {
